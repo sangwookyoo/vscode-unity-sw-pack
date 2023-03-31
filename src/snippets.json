@@ -1,0 +1,784 @@
+{
+	"Unity MonoBehaviour": {
+		"prefix": "MonoBehaviour",
+		"description": "Unity MonoBehaviour class template.",
+		"body": [
+			"using UnityEngine;",
+			"",
+			"public class ${TM_FILENAME_BASE} : MonoBehaviour",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"Unity NetworkBehaviour": {
+		"prefix": "NetworkBehaviour",
+		"description": "Unity NetworkBehaviour class template.",
+		"body": [
+			"using UnityEngine;",
+			"using UnityEngine.Networking;",
+			"",
+			"public class ${TM_FILENAME_BASE} : NetworkBehaviour",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"Unity ScriptableObject": {
+		"prefix": "ScriptableObject",
+		"description": "Unity ScriptableObject class template.",
+		"body": [
+			"using UnityEngine;",
+			"",
+			"[CreateAssetMenu(fileName = \"${1:${TM_FILENAME_BASE}}\", menuName = \"\")]",
+			"public class ${TM_FILENAME_BASE} : ScriptableObject",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"Unity Editor": {
+		"prefix": "Editor",
+		"description": "Unity Editor class template.",
+		"body": [
+			"using UnityEngine;",
+			"using UnityEditor;",
+			"",
+			"[CustomEditor(typeof(${1:${TM_FILENAME_BASE/(.*)Editor/${1}/}}))]",
+			"public class ${TM_FILENAME_BASE} : Editor",
+			"{",
+			"\tpublic override void OnInspectorGUI()",
+			"\t{",
+			"\t\tbase.OnInspectorGUI();",
+			"\t\t$0",
+			"\t}",
+			"}"
+		]
+	},
+	"MonoBehaviour Awake": {
+		"name": "Awake",
+		"prefix": "Awake",
+		"description": "Awake는 스크립트 인스턴스가 로드되는 중에 호출됩니다.",
+		"body": [
+			"private void Awake()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour FixedUpdate": {
+		"prefix": "FixedUpdate",
+		"description": "이 함수는 MonoBehaviour를 사용하도록 설정한 경우 고정 프레임속도 프레임마다 호출됩니다.",
+		"body": [
+			"private void FixedUpdate()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour LateUpdate": {
+		"prefix": "LateUpdate",
+		"description": "Behaviour를 사용하도록 설정한 경우 LateUpdate가 프레임마다 호출됩니다.",
+		"body": [
+			"private void LateUpdate()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnAnimatorIK": {
+		"prefix": "OnAnimatorIK",
+		"description": "애니메이션 IK(역운동학)를 설정하기 위한 콜백",
+		"body": [
+			"private void OnAnimatorIK(int layerIndex)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnAnimatorMove": {
+		"prefix": "OnAnimatorMove",
+		"description": "이 콜백은 상태 시스템 및 애니메이션이 평가된 후 OnAnimatorIK 전에 각 프레임에서 호출됩니다.",
+		"body": [
+			"private void OnAnimatorMove()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnApplicationFocus": {
+		"prefix": "OnApplicationFocus",
+		"description": "플레이어가 포커스를 받거나 잃을 때 모든 게임 객체로 전송",
+		"body": [
+			"private void OnApplicationFocus(bool focusStatus)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnApplicationPause": {
+		"prefix": "OnApplicationPause",
+		"description": "플레이어가 일시 중지할 때 모든 게임 개체로 전송",
+		"body": [
+			"private void OnApplicationPause(bool pauseStatus)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnApplicationQuit": {
+		"prefix": "OnApplicationQuit",
+		"description": "애플리케이션이 종료되기 전에 모든 게임 개체로 전송",
+		"body": [
+			"private void OnApplicationQuit()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnAudioFilterRead": {
+		"prefix": "OnAudioFilterRead",
+		"description": "OnAudioFilterRead가 구현된 경우 Unity에서는 사용자 지정 필터를 오디오 DSP 체인에 삽입합니다.",
+		"body": [
+			"private void OnAudioFilterRead(float[] data, int channels)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnBecameInvisible": {
+		"prefix": "OnBecameInvisible",
+		"description": "OnBecameInvisible은 어느 카메라에서든 렌더러가 더 이상 표시되지 않는 경우 호출됩니다.",
+		"body": [
+			"private void OnBecameInvisible()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnBecameVisible": {
+		"prefix": "OnBecameVisible",
+		"description": "OnBecameVisible은 어느 카메라에서든 렌더러가 표시되는 경우 호출됩니다.",
+		"body": [
+			"private void OnBecameVisible()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnBeforeTransformParentChanged": {
+		"prefix": "OnBeforeTransformParentChanged",
+		"description": "변환 상위 변경이 발생하기 전 그래픽으로 전송된 콜백",
+		"body": [
+			"private void OnBeforeTransformParentChanged()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnCanvasGroupChanged": {
+		"prefix": "OnCanvasGroupChanged",
+		"description": "캔버스 그룹이 변경된 경우 전송되는 콜백",
+		"body": [
+			"private void OnCanvasGroupChanged()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnCollisionEnter": {
+		"prefix": "OnCollisionEnter",
+		"description": "OnCollisionEnter는 이 collider/rigidbody가 다른 rigidbody/collider에 접촉되기 시작하면 호출됩니다.",
+		"body": [
+			"private void OnCollisionEnter(Collision other)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnCollisionEnter2D": {
+		"prefix": "OnCollisionEnter2D",
+		"description": "OnCollisionEnter2D는 이 collider2D/rigidbody2D가 다른 rigidbody2D/collider2D에 접촉되기 시작하면 호출됩니다(2D 물리학에만 해당)",
+		"body": [
+			"private void OnCollisionEnter2D(Collision2D other)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnCollisionExit": {
+		"prefix": "OnCollisionExit",
+		"description": "OnCollisionExit는 이 collider/rigidbody가 다른 rigidbody/collider 접촉을 중단하면 호출됩니다.",
+		"body": [
+			"private void OnCollisionExit(Collision other)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnCollisionExit2D": {
+		"prefix": "OnCollisionExit2D",
+		"description": "OnCollisionExit2D는 이 collider2D/rigidbody2D가 다른 rigidbody2D/collider2D 접촉을 중단하면 호출됩니다(2D 물리학에만 해당)",
+		"body": [
+			"private void OnCollisionExit2D(Collision2D other)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnCollisionStay": {
+		"prefix": "OnCollisionStay",
+		"description": "OnCollisionStay는 다른 collider\/rigidbody에 접촉되어 있는 모든 rigidbody\/collider에 대해 프레임당 한 번 호출됩니다.",
+		"body": [
+			"private void OnCollisionStay(Collision other)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnCollisionStay2D": {
+		"prefix": "OnCollisionStay2D",
+		"description": "OnCollisionStay2D는 다른 rigidbody2D\/collider2D에 접촉되어 있는 모든 collider2D\/rigidbody2D에 대해 프레임당 한 번 호출됩니다(2D 물리학에만 해당).",
+		"body": [
+			"private void OnCollisionStay2D(Collision2D other)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnConnectedToServer": {
+		"prefix": "OnConnectedToServer",
+		"description": "서버에 성공적으로 연결한 경우 클라이언트에서 호출됨",
+		"body": [
+			"private void OnConnectedToServer()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnControllerColliderHit": {
+		"prefix": "OnControllerColliderHit",
+		"description": "OnControllerColliderHit는 이동을 수행하는 중에 컨트롤러가 collider에 도달하는 경우 호출됩니다.",
+		"body": [
+			"private void OnControllerColliderHit(ControllerColliderHit hit)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnDestroy": {
+		"prefix": "OnDestroy",
+		"description": "이 함수는 MonoBehaviour가 삭제될 때 호출됩니다.",
+		"body": [
+			"private void OnDestroy()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnDisable": {
+		"prefix": "OnDisable",
+		"description": "이 함수는 동작이 사용할 수 없거나 비활성화되는 경우 호출됩니다.",
+		"body": [
+			"private void OnDisable()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnDisconnectedFromMasterServer": {
+		"prefix": "OnDisconnectedFromMasterServer",
+		"description": "연결이 끊겼거나 마스터 서버와의 연결이 끊기는 경우 클라이언트에서 호출됨",
+		"body": [
+			"private void OnDisconnectedFromMasterServer(NetworkDisconnection info)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnDisconnectedFromServer": {
+		"prefix": "OnDisconnectedFromServer",
+		"description": "연결이 끊겼거나 서버와의 연결이 끊기는 경우 클라이언트에서 호출됨",
+		"body": [
+			"private void OnDisconnectedFromServer(NetworkDisconnection info)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnDrawGizmos": {
+		"prefix": "OnDrawGizmos",
+		"description": "마찬가지로 선택 가능하고 항상 그려지는 gizmo를 그리려면 이 OnDrawGizmos를 구현합니다.",
+		"body": [
+			"private void OnDrawGizmos()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnDrawGizmosSelected": {
+		"prefix": "OnDrawGizmosSelected",
+		"description": "개체를 선택한 경우에만 gizmo를 그리려면 이 OnDrawGizmosSelected를 구현합니다.",
+		"body": [
+			"private void OnDrawGizmosSelected()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnEnable": {
+		"prefix": "OnEnable",
+		"description": "이 함수는 개체가 사용하도록 설정되고 활성 상태가 되면 호출됩니다.",
+		"body": [
+			"private void OnEnable()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnFailedToConnect": {
+		"prefix": "OnFailedToConnect",
+		"description": "어떤 이유로 인해 연결 시도가 실패하면 클라이언트에서 호출됨",
+		"body": [
+			"private void OnFailedToConnect(NetworkConnectionError error)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnFailedToConnectToMasterServer": {
+		"prefix": "OnFailedToConnectToMasterServer",
+		"description": "MasterServer에 연결하는 중에 문제가 발생하는 경우 클라이언트 또는 서버에서 호출됨",
+		"body": [
+			"private void OnFailedToConnectToMasterServer(NetworkConnectionError error)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnGUI": {
+		"prefix": "OnGUI",
+		"description": "OnGUI는 GUI 이벤트를 렌더링 및 처리하기 위해 호출됩니다.",
+		"body": [
+			"private void OnGUI()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnJointBreak": {
+		"prefix": "OnJointBreak",
+		"description": "동일한 게임 객체에 대한 공동 연결이 끊어지는 경우 호출됨",
+		"body": [
+			"private void OnJointBreak(float breakForce)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnJointBreak2D": {
+		"prefix": "OnJointBreak2D",
+		"description": "동일한 게임 개체에 연결된 Joint2D의 연결이 끊기는 경우 호출됨(2D 물리학에만 해당)",
+		"body": [
+			"private void OnJointBreak2D(Joint2D brokenJoint)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnLevelWasLoaded": {
+		"prefix": "OnLevelWasLoaded",
+		"description": "이 함수는 새 수준이 로드된 후 호출됩니다.",
+		"body": [
+			"private void OnLevelWasLoaded(int level)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnMasterServerEvent": {
+		"prefix": "OnMasterServerEvent",
+		"description": "MasterServer의 이벤트를 보고할 때 클라이언트 또는 서버에서 호출됨",
+		"body": [
+			"private void OnMasterServerEvent(MasterServerEvent msEvent)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnMouseDown": {
+		"prefix": "OnMouseDown",
+		"description": "OnMouseDown은 사용자가 GUIElement 또는 Collider 위를 마우스 단추로 누르는 경우 호출됩니다.",
+		"body": [
+			"private void OnMouseDown()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnMouseDrag": {
+		"prefix": "OnMouseDrag",
+		"description": "OnMouseDrag는 사용자가 GUIElement 또는 Collider를 클릭하고 마우스 단추를 누르고 있는 경우 호출됩니다.",
+		"body": [
+			"private void OnMouseDrag()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnMouseEnter": {
+		"prefix": "OnMouseEnter",
+		"description": "OnMouseEnter는 GUIElement 또는 Collider로 마우스를 이동하는 경우 호출됩니다.",
+		"body": [
+			"private void OnMouseEnter()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnMouseExit": {
+		"prefix": "OnMouseExit",
+		"description": "OnMouseExit는 마우스로 GUIElement 또는 Collider를 더 이상 가리키지 않는 경우 호출됩니다.",
+		"body": [
+			"private void OnMouseExit()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnMouseOver": {
+		"prefix": "OnMouseOver",
+		"description": "OnMouseOver는 마우스로 GUIElement 또는 Collider를 가리킬 때 프레임마다 호출됩니다.",
+		"body": [
+			"private void OnMouseOver()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnMouseUp": {
+		"prefix": "OnMouseUp",
+		"description": "OnMouseUp은 사용자가 마우스 단추를 놓을 때 호출됩니다.",
+		"body": [
+			"private void OnMouseUp()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnMouseUpAsButton": {
+		"prefix": "OnMouseUpAsButton",
+		"description": "OnMouseUpAsButton은 누르던 동일한 GUIElement 또는 Collider 위에서 마우스 단추를 놓을 때만 호출됩니다.",
+		"body": [
+			"private void OnMouseUpAsButton()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnNetworkInstantiate": {
+		"prefix": "OnNetworkInstantiate",
+		"description": "Network.Instantiate로 네트워크가 인스턴스화된 개체에서 호출됨",
+		"body": [
+			"private void OnNetworkInstantiate(NetworkMessageInfo info)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnParticleCollision": {
+		"prefix": "OnParticleCollision",
+		"description": "OnParticleCollision은 particle이 collider에 도달할 때 호출됩니다.",
+		"body": [
+			"private void OnParticleCollision(GameObject other)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnParticleSystemStopped": {
+		"prefix": "OnParticleSystemStopped",
+		"description": "시스템의 모든 파티클이 정지되면 호출되며, 새 파티클이 만들어지지 않습니다.",
+		"body": [
+			"private void OnParticleSystemStopped()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnParticleTrigger": {
+		"prefix": "OnParticleTrigger",
+		"description": "파티클 시스템의 파티클이 트리거 모듈의 조건을 충족하는 경우 호출됨",
+		"body": [
+			"private void OnParticleTrigger()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnParticleUpdateJobScheduled": {
+		"prefix": "OnParticleUpdateJobScheduled",
+		"description": "파티클 시스템의 기본 제공 업데이트 작업이 예약된 경우 호출됩니다.",
+		"body": [
+			"private void OnParticleUpdateJobScheduled()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnPlayerConnected": {
+		"prefix": "OnPlayerConnected",
+		"description": "새 플레이어가 성공적으로 연결될 때마다 서버에서 호출됨",
+		"body": [
+			"private void OnPlayerConnected(NetworkPlayer player)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnPlayerDisconnected": {
+		"prefix": "OnPlayerDisconnected",
+		"description": "플레이어와 서버의 연결이 끊어질 때마다 서버에서 호출됨",
+		"body": [
+			"private void OnPlayerDisconnected(NetworkPlayer player)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnPostRender": {
+		"prefix": "OnPostRender",
+		"description": "OnPostRender는 카메라에서 장면 렌더링을 완료한 후 호출됩니다.",
+		"body": [
+			"private void OnPostRender()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnPreCull": {
+		"prefix": "OnPreCull",
+		"description": "OnPreCull은 카메라에서 장면을 선별하기 전에 호출됩니다.",
+		"body": [
+			"private void OnPreCull()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnPreRender": {
+		"prefix": "OnPreRender",
+		"description": "OnPreRender는 카메라에서 장면 렌더링을 시작하기 전에 호출됩니다.",
+		"body": [
+			"private void OnPreRender()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnRectTransformDimensionsChange": {
+		"prefix": "OnRectTransformDimensionsChange",
+		"description": "연관된 RectTransform의 차원이 변경된 경우 전송되는 콜백",
+		"body": [
+			"private void OnRectTransformDimensionsChange()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnRectTransformRemoved": {
+		"prefix": "OnRectTransformRemoved",
+		"description": "연관된 RectTransform이 제거된 경우 전송되는 콜백",
+		"body": [
+			"private void OnRectTransformRemoved()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnRenderImage": {
+		"prefix": "OnRenderImage",
+		"description": "OnRenderImage는 모든 렌더링에서 이미지 렌더링을 완료한 후 호출됩니다.",
+		"body": [
+			"private void OnRenderImage(RenderTexture src, RenderTexture dest)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnRenderObject": {
+		"prefix": "OnRenderObject",
+		"description": "OnRenderObject는 카메라에서 장면을 렌더링한 후 호출됩니다.",
+		"body": [
+			"private void OnRenderObject()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnSerializeNetworkView": {
+		"prefix": "OnSerializeNetworkView",
+		"description": "네트워크 보기에서 감시되는 스크립트의 변수 동기화를 사용자 지정하는 데 사용됩니다.",
+		"body": [
+			"private void OnSerializeNetworkView(BitStream stream, NetworkMessageInfo info)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnServerInitialized": {
+		"prefix": "OnServerInitialized",
+		"description": "Network.InitializeServer가 호출되어 완료될 때마다 서버에서 호출됨",
+		"body": [
+			"private void OnServerInitialized()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnTransformChildrenChanged": {
+		"prefix": "OnTransformChildrenChanged",
+		"description": "변환 하위 변경이 발생한 후 그래픽으로 전송된 콜백",
+		"body": [
+			"private void OnTransformChildrenChanged()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnTransformParentChanged": {
+		"prefix": "OnTransformParentChanged",
+		"description": "변환 상위 변경이 발생한 후 그래픽으로 전송된 콜백",
+		"body": [
+			"private void OnTransformParentChanged()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnTriggerEnter": {
+		"prefix": "OnTriggerEnter",
+		"description": "OnTriggerEnter는 Collider other가 트리거가 될 때 호출됩니다.",
+		"body": [
+			"private void OnTriggerEnter(Collider other)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnTriggerEnter2D": {
+		"prefix": "OnTriggerEnter2D",
+		"description": "OnTriggerEnter2D는 Collider2D other가 트리거가 될 때 호출됩니다(2D 물리학에만 해당).",
+		"body": [
+			"private void OnTriggerEnter2D(Collider2D other)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnTriggerExit": {
+		"prefix": "OnTriggerExit",
+		"description": "OnTriggerExit는 Collider other가 트리거 접촉을 중지한 경우 호출됩니다.",
+		"body": [
+			"private void OnTriggerExit(Collider other)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnTriggerExit2D": {
+		"prefix": "OnTriggerExit2D",
+		"description": "OnTriggerExit2D는 Collider2D other가 트리거 접촉을 중지한 경우 호출됩니다(2D 물리학에만 해당).",
+		"body": [
+			"private void OnTriggerExit2D(Collider2D other)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnTriggerStay": {
+		"prefix": "OnTriggerStay",
+		"description": "OnTriggerStay는 트리거와 접촉하고 있는 모든 Collider other에 대해 프레임당 한 번 호출됩니다.",
+		"body": [
+			"private void OnTriggerStay(Collider other)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnTriggerStay2D": {
+		"prefix": "OnTriggerStay2D",
+		"description": "OnTriggerStay2D는 트리거와 접촉하고 있는 모든 Collider2D other에 대해 프레임당 한 번 호출됩니다(2D 물리학에만 해당).",
+		"body": [
+			"private void OnTriggerStay2D(Collider2D other)",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnValidate": {
+		"prefix": "OnValidate",
+		"description": "이 함수는 검사기에서 스크립트가 로드되거나 값이 변경되면 호출됩니다(편집기에서만 호출됨).",
+		"body": [
+			"private void OnValidate()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour OnWillRenderObject": {
+		"prefix": "OnWillRenderObject",
+		"description": "OnWillRenderObject는 개체가 표시되는 경우 각 카메라에 대해 한 번 호출됩니다.",
+		"body": [
+			"private void OnWillRenderObject()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour Reset": {
+		"prefix": "Reset",
+		"description": "기본값으로 다시 설정",
+		"body": [
+			"private void Reset()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour Start": {
+		"prefix": "Start",
+		"description": "Start는 Update 메서드가 처음으로 호출되기 바로 전에 호출됩니다.",
+		"body": [
+			"private void Start()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"MonoBehaviour Update": {
+		"prefix": "Update",
+		"description": "Behaviour를 사용하도록 설정한 경우 Update가 프레임마다 호출됩니다.",
+		"body": [
+			"private void Update()",
+			"{",
+			"\t$0",
+			"}"
+		]
+	},
+	"Debug Log": {
+		"prefix": "Log",
+		"description": "Unity 메시지를 콘솔 창에 로깅합니다.",
+		"body": "Debug.Log(\\$\"$0\");"
+	},
+	"Debug Log Warning": {
+		"prefix": "LogWarning",
+		"description": "Unity 경고 메시지를 콘솔 창에 로깅합니다.",
+		"body": "Debug.LogWarning(\\$\"$0\");"
+	},
+	"Debug Log Error": {
+		"prefix": "LogError",
+		"description": "Unity 에러 메시지를 콘솔 창에 로깅합니다.",
+		"body": "Debug.LogError(\\$\"$0\");"
+	}
+}
