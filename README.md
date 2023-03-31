@@ -20,10 +20,10 @@
 * .meta 파일의 변경사항을 검사하여 변경점이 있으면 동기화합니다.
 ![metaFile](gifs/05.gif)
 * Unity 메시지에 대한 문서 탐색을 제공합니다. (단축키: Shift+1)
-* C# Extension을 추가하고 Unity 개발을 위해 `useModernNet: false` 처리합니다.
+* Unity 개발을 위해 C# Extension의 `"omnisharp.useModernNet": false` 처리합니다.
+
 
 ## 제공되는 코드 스니펫
-
 * Game classes:
 	* `MonoBehaviour`
 	* `NetworkBehaviour`
