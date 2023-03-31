@@ -9,14 +9,18 @@
 
 ## 주요 기능
 
-* C# Extension을 추가하고 Unity 개발을 위해 `useModernNet: false` 처리합니다.
 * Unity를 위한 코드 스니펫을 한국어로 제공합니다.
+![CodeSnippets](gifs/01.gif)
 * Unity 스크립트가 참조하고 있는 Scene, Prefab을 보여줍니다.
-* Unity 메시지를 위한 CodeLens를 제공합니다.
-* Unity 메시지에 대한 Hover를 제공합니다.
-* Unity 메시지에 대한 문서 탐색을 제공합니다. (단축키: Shift+1)
+![Usages](gifs/02.gif)
+* Unity 메시지에 대한 CodeLens를 제공합니다.
+![CodeLens](gifs/03.gif)
 * void-IEnumerator 간의 함수 시그니처 변경(타입 토글)을 제공합니다.
+![TypeToggle](gifs/04.gif)
 * .meta 파일의 변경사항을 검사하여 변경점이 있으면 동기화합니다.
+![metaFile](gifs/05.gif)
+* Unity 메시지에 대한 문서 탐색을 제공합니다. (단축키: Shift+1)
+* C# Extension을 추가하고 Unity 개발을 위해 `useModernNet: false` 처리합니다.
 
 ## 제공되는 코드 스니펫
 
