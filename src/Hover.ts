@@ -19,7 +19,7 @@ export default class UnityMessageHoverProvider implements HoverProvider {
         if (name === undefined) return;
 
         // snippets.json 파일에서 해당 메소드의 설명을 가져온다
-        const msg = Object.values(snippet).find((msg) => msg.prefix === name)
+        const msg = Object.values(snippet).find((msg) => msg.prefix === name);
         if (msg !== undefined) {
 
             // 해당 메소드의 이름이 위치한 range를 가져온다

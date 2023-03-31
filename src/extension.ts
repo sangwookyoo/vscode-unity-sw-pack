@@ -13,7 +13,7 @@ export const assetParser = new AssetParser();
 export function activate(context: ExtensionContext) {
     if (workspace.getConfiguration('omnisharp')) {
         const omnisharp = workspace.getConfiguration('omnisharp');
-        omnisharp.update('useModernNet', false, ConfigurationTarget.Global)
+        omnisharp.update('useModernNet', false, ConfigurationTarget.Global);
     }
 
     languages.registerCodeLensProvider({ language: "csharp" }, new UnityMessageCodeLensProvider());
