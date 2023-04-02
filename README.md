@@ -7,6 +7,12 @@
 * [Windows만 해당] Windows를 다시 시작하여 %PATH%에 대한 변경 사항을 적용
 * [macOS만 해당] "일부 프로젝트를 로드하는 데 문제가 있습니다. 자세한 내용은 출력을 검토하세요."라는 메시지가 표시되지 않도록 하려면 최신 [Mono](https://www.mono-project.com/download/stable/#download-mac) 릴리즈를 설치
 
+### Visual Studio용 빌드 도구 설치 (Windows만 해당)
+
+C# 확장 프로그램은 더 이상 Microsoft 빌드 도구와 함께 제공되지 않으므로 수동으로 설치해야 합니다.
+* [Visual Studio 2022용 빌드 도구](https://visualstudio.microsoft.com/ko/downloads/)를 다운로드합니다.
+* .NET 데스크톱 빌드 도구 워크로드를 설치합니다. 다른 구성 요소는 필요하지 않습니다.
+
 ## 주요 기능
 
 * Unity를 위한 코드 스니펫을 한국어로 제공합니다.
