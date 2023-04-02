@@ -1,14 +1,25 @@
-import { commands, ConfigurationTarget, ExtensionContext, languages, workspace } from 'vscode';
-import { UnityMessageCodeLensProvider, UnityMethodCodeLensProvider, UsagesCodeLensProvider } from './CodeLens';
+import { workspace, ExtensionContext, ConfigurationTarget, languages, commands } from "vscode";
+import AssetParser from "./AssetParser";
+import Parser from "./Parser";
+import { UnityEventMessageProvider } from "./UnityEventMessage";
+import { UsageScenePrefabProvider } from "./UsageScenePrefab";
 import UnityMessageHoverProvider from "./Hover";
-import { returnMethodType, searchInUnityDocumentation } from './Command';
-import Parser from './Parser';
-import AssetParser from './AssetParser';
-import * as fs from "fs";
+import { TypeToggleProvider, returnMethodType } from "./TypeToggle";
+import { searchUnityDocs } from "./SearchUnityDocs";
+
+import * as fs from 'fs';
 import * as metaFileSync from "./MetaFileSync";
 
 export const parser = new Parser();
 export const assetParser = new AssetParser();
+
+const unitySWpack = workspace.getConfiguration('unitySWpack');
+const unityEventMessageEnabled = unitySWpack.get('unityEventMessage');
+const usageScenePrefabEnabled = unitySWpack.get('usageScenePrefab');
+const unityMessageHoverEnabled = unitySWpack.get('unityMessageHover');
+const typeToggleEnabled = unitySWpack.get('typeToggle');
+const metaFileSyncEnabled = unitySWpack.get('metaFileSync');
+const searchInUnityDocsEnabled = unitySWpack.get('searchInUnityDocs');
 
 export function activate(context: ExtensionContext) {
     if (workspace.getConfiguration('omnisharp')) {
@@ -16,25 +27,42 @@ export function activate(context: ExtensionContext) {
         omnisharp.update('useModernNet', false, ConfigurationTarget.Global);
     }
 
-    languages.registerCodeLensProvider({ language: "csharp" }, new UnityMessageCodeLensProvider());
-    languages.registerCodeLensProvider({ language: "csharp" }, new UnityMethodCodeLensProvider());
-    languages.registerCodeLensProvider({ language: "csharp" }, new UsagesCodeLensProvider());
-    languages.registerHoverProvider({ language: "csharp" }, new UnityMessageHoverProvider());
+    if (unityEventMessageEnabled) {
+        languages.registerCodeLensProvider({ language: "csharp" }, new UnityEventMessageProvider());
+    }
 
-    commands.registerCommand('unitySWpack.searchInUnityDocumentation', searchInUnityDocumentation);
-    commands.registerCommand('unitySWpack.changeReturnType', (returnType: string, line: number) => {
-        returnMethodType(returnType, line);
-    });
+    if (usageScenePrefabEnabled) {
+        languages.registerCodeLensProvider({ language: "csharp" }, new UsageScenePrefabProvider());
+    }
 
-    if (
-        fs.existsSync(workspace.rootPath + "/Library") &&
-        fs.existsSync(workspace.rootPath + "/Assets") &&
-        fs.existsSync(workspace.rootPath + "/ProjectSettings")
-    ) {
-        metaFileSync.activate(context);
+    if (unityMessageHoverEnabled) {
+        languages.registerHoverProvider({ language: "csharp" }, new UnityMessageHoverProvider());
+    }
+
+    if (typeToggleEnabled) {
+        languages.registerCodeLensProvider({ language: "csharp" }, new TypeToggleProvider());
+        commands.registerCommand('unitySWpack.changeReturnType', (returnType: string, line: number) => {
+            returnMethodType(returnType, line);
+        });
+    }
+
+    if (metaFileSyncEnabled) {
+        if (
+            fs.existsSync(workspace.rootPath + "/Library") &&
+            fs.existsSync(workspace.rootPath + "/Assets") &&
+            fs.existsSync(workspace.rootPath + "/ProjectSettings")
+        ) {
+            metaFileSync.activate(context);
+        }
+    }
+
+    if (searchInUnityDocsEnabled) {
+        commands.registerCommand('unitySWpack.searchInUnityDocumentation', searchUnityDocs);
     }
 }
 
 export function deactivate() {
-    metaFileSync.deactivate();
+    if (metaFileSyncEnabled) {
+        metaFileSync.deactivate();
+    }
 }
