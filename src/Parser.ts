@@ -3,7 +3,7 @@ import * as snippet from "./snippets.json";
 export default class Parser {
     private findBehaviourExp = new RegExp(/class.*: *(Mono|Network)Behaviour/);
     private findMethodNameExp = new RegExp(/(?:void|IEnumerator) *(.*?) *\(.*\)/);
-    private findReturnTypeExp = new RegExp(/(?:public|private|protected)?\s+(?:static\s+)?(\w+)\s+(\w+)\s*\(/);
+    private findReturnTypeExp = new RegExp(/(?:public|private|protected)?\s+(?:static\s+)?(void|IEnumerator)\s+(\w+)\s*\(/);
     private hasUnityMessageExp: RegExp;
     private hasUnityMessageIEnumeratorExp = new RegExp("IEnumerator *Start *\(\)");
 
