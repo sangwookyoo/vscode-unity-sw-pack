@@ -2,7 +2,7 @@
   "name": "unity-sw-pack",
   "displayName": "Unity SW Pack",
   "description": "Unity Extension for Visual Studio Code",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "publisher": "SangwookYoo",
   "icon": "images/icon.png",
   "license": "MIT",
@@ -37,32 +37,32 @@
 				"unitySWpack.unityEventMessage": {
 					"type": "boolean",
 					"default": true,
-					"description": "Unity 이벤트 함수를 표기합니다."
+					"description": "Indicates Unity event function."
 				},
         "unitySWpack.usageScenePrefab": {
 					"type": "boolean",
 					"default": true,
-					"description": "Unity 스크립트가 참조하고 있는 Scene, Prefab을 보여줍니다."
+					"description": "Shows Scene and Prefab referenced by Script."
 				},
         "unitySWpack.unityMessageHover": {
 					"type": "boolean",
 					"default": true,
-					"description": "Unity 메시지에 대한 설명를 Hover로 보여줍니다."
+					"description": "Displays explanations of Unity messages on Hover."
 				},
         "unitySWpack.typeToggle": {
 					"type": "boolean",
 					"default": true,
-					"description": "void-IEnumerator 간의 함수 시그니처 변경(타입 토글)을 제공합니다."
+					"description": "Provide function signature change (Type toggle) between void-IEnumerator."
 				},
         "unitySWpack.metaFileSync": {
 					"type": "boolean",
 					"default": true,
-					"description": ".meta 파일의 변경사항을 검사하여 변경점이 있으면 동기화합니다."
+					"description": "Checks for changes in .meta files and syncs them if there are any."
 				},
         "unitySWpack.searchInUnityDocs": {
 					"type": "boolean",
 					"default": true,
-					"description": "Unity 메시지에 대한 문서 탐색을 제공합니다."
+					"description": "Provides documentation navigation for Unity messages."
 				}
 			}
     },
@@ -97,11 +97,11 @@
     "commands": [
       {
         "command": "unitySWpack.searchInUnityDocumentation",
-        "title": "Unity 문서 탐색"
+        "title": "Search in Unity Documentation"
       },
       {
         "command": "unitySWpack.changeReturnType",
-        "title": "타입 토글"
+        "title": "Type toggle"
       }
     ],
     "keybindings": [

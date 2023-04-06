@@ -9,12 +9,14 @@ export class TypeToggleProvider implements CodeLensProvider {
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i];
 
+            if (!parser.isInBehaviour(lines, i)) continue;
+
             const returnType = parser.findReturnType(line);
             if (returnType === undefined) continue;
 
             let cmd: Command = {
                 command: "unitySWpack.changeReturnType",
-                title: "$(symbol-property) 타입 토글",
+                title: "$(symbol-property) Type toggle",
                 arguments: [returnType, i]
             };
 

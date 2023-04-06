@@ -21,8 +21,8 @@ export class UnityEventMessageProvider implements CodeLensProvider {
 
             let cmd: Command = {
                 command: "",
-                title: "$(symbol-method) Unity 메시지",
-                tooltip: "이 메서드는 Unity 런타임에 의해 호출됩니다."
+                title: "$(symbol-method) Unity Message",
+                tooltip: "This method is invoked by Unity runtime"
             };
 
             list.push(new CodeLens(doc.lineAt(i).range, cmd));
