@@ -18,4 +18,7 @@ Check [Keep a Changelog](https://github.com/sangwookyoo/vscode-unity-sw-pack/) f
 ## [0.0.4 Released]
 
 - Support English.
-- Changed Scene/Prefab symbols.
+
+## [0.0.5 Released]
+
+- Fixed bugs.

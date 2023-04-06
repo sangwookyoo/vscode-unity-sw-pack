@@ -34,7 +34,7 @@ export class UsageScenePrefabProvider implements CodeLensProvider {
     }
 
     formatTitle(word: string, count: number): string {
-        return `$(symbol-method) ${word} ${count} references`;
+        return `$(symbol-field) ${word} ${count} references`;
     }
 
     formatTooltip(refs: string[], extensionLength: number): string {

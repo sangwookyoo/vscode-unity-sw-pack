@@ -37,7 +37,6 @@ export function returnMethodType(returnType: string, line: number) {
         returnType = 'void';
     }
 
-    // System.Collections namespace 검사
     if (!editor.document.lineAt(0).text.includes('using System.Collections;')) {
         editor.edit((editBuilder) => {
             editBuilder.insert(new Position(0, 0), 'using System.Collections;\n');
