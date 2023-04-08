@@ -22,3 +22,7 @@ Check [Keep a Changelog](https://github.com/sangwookyoo/vscode-unity-sw-pack/) f
 ## [0.0.5 Released]
 
 - Fixed bugs.
+
+## [0.0.6 Released]
+
+- Added feature that Indicates Unity event function.

@@ -10,6 +10,8 @@ import { searchUnityDocs } from "./SearchUnityDocs";
 import * as fs from 'fs';
 import * as metaFileSync from "./MetaFileSync";
 
+import * as unityLens from "./event-lens/unity-lens";
+
 export const parser = new Parser();
 export const assetParser = new AssetParser();
 
@@ -20,6 +22,7 @@ const unityMessageHoverEnabled = unitySWpack.get('unityMessageHover');
 const typeToggleEnabled = unitySWpack.get('typeToggle');
 const metaFileSyncEnabled = unitySWpack.get('metaFileSync');
 const searchInUnityDocsEnabled = unitySWpack.get('searchInUnityDocs');
+const unityEventLensEnabled = unitySWpack.get('unityEventLens');
 
 export function activate(context: ExtensionContext) {
     if (workspace.getConfiguration('omnisharp')) {
@@ -58,6 +61,10 @@ export function activate(context: ExtensionContext) {
 
     if (searchInUnityDocsEnabled) {
         commands.registerCommand('unitySWpack.searchInUnityDocumentation', searchUnityDocs);
+    }
+
+    if (unityEventLensEnabled) {
+        unityLens.activate(context);
     }
 }
 

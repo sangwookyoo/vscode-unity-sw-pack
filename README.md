@@ -22,17 +22,19 @@ The C# extension no longer ships with Microsoft Build Tools so they must be inst
 ![CodeSnippets](gifs/01.gif)
 ### 2. [ON/OFF] Shows Scene and Prefab referenced by Script.
 ![UsageScenePrefab](gifs/02.gif)
-### 3. [ON/OFF] Indicates Unity event function.
-![UnityEventMessage](gifs/03.gif)
-### 4. [ON/OFF] Displays explanations of Unity messages on Hover.
-![Hover](gifs/04.gif)
-### 5. [ON/OFF] Provide function signature change (Type toggle) between void-IEnumerator.
-![TypeToggle](gifs/05.gif)
-### 6. [ON/OFF] Checks for changes in .meta files and syncs them if there are any.
-![metaFile](gifs/06.gif)
-### 7. [ON/OFF] Provides documentation navigation for Unity messages. (Shortcut: Shift+1)
-### 8. [ON/OFF] Provides theme 'Unity SW Pack Dark'.
-### 9. Handle `"omnisharp.useModernNet": false` of C# Extension for Unity development.
+### 3. [OM/OFF] Indicates Unity event bindings
+![UnityEventBinding](gifs/03.gif)
+### 4. [ON/OFF] Indicates Unity event function.
+![UnityEventMessage](gifs/04.gif)
+### 5. [ON/OFF] Displays explanations of Unity messages on Hover.
+![Hover](gifs/05.gif)
+### 6. [ON/OFF] Provide function signature change (Type toggle) between void-IEnumerator.
+![TypeToggle](gifs/06.gif)
+### 7. [ON/OFF] Checks for changes in .meta files and syncs them if there are any.
+![metaFile](gifs/07.gif)
+### 8. [ON/OFF] Provides documentation navigation for Unity messages. (Shortcut: Shift+1)
+### 9. [ON/OFF] Provides theme 'Unity SW Pack Dark'.
+### 10. Handle `"omnisharp.useModernNet": false` of C# Extension for Unity development.
 
 ## Provided Code snippet
 * Game classes:

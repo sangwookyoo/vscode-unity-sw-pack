@@ -2,7 +2,7 @@
   "name": "unity-sw-pack",
   "displayName": "Unity SW Pack",
   "description": "Unity Extension for Visual Studio Code",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "publisher": "SangwookYoo",
   "icon": "images/icon.png",
   "license": "MIT",
@@ -33,38 +33,43 @@
   "contributes": {
     "configuration": {
       "title": "Unity SW Pack",
-			"properties": {
-				"unitySWpack.unityEventMessage": {
-					"type": "boolean",
-					"default": true,
-					"description": "Indicates Unity event function."
-				},
+      "properties": {
+        "unitySWpack.unityEventMessage": {
+          "type": "boolean",
+          "default": true,
+          "description": "Indicates Unity event function."
+        },
         "unitySWpack.usageScenePrefab": {
-					"type": "boolean",
-					"default": true,
-					"description": "Shows Scene and Prefab referenced by Script."
-				},
+          "type": "boolean",
+          "default": true,
+          "description": "Shows Scene and Prefab referenced by Script."
+        },
         "unitySWpack.unityMessageHover": {
-					"type": "boolean",
-					"default": true,
-					"description": "Displays explanations of Unity messages on Hover."
-				},
+          "type": "boolean",
+          "default": true,
+          "description": "Displays explanations of Unity messages on Hover."
+        },
         "unitySWpack.typeToggle": {
-					"type": "boolean",
-					"default": true,
-					"description": "Provide function signature change (Type toggle) between void-IEnumerator."
-				},
+          "type": "boolean",
+          "default": true,
+          "description": "Provide function signature change (Type toggle) between void-IEnumerator."
+        },
         "unitySWpack.metaFileSync": {
-					"type": "boolean",
-					"default": true,
-					"description": "Checks for changes in .meta files and syncs them if there are any."
-				},
+          "type": "boolean",
+          "default": true,
+          "description": "Checks for changes in .meta files and syncs them if there are any."
+        },
         "unitySWpack.searchInUnityDocs": {
-					"type": "boolean",
-					"default": true,
-					"description": "Provides documentation navigation for Unity messages."
-				}
-			}
+          "type": "boolean",
+          "default": true,
+          "description": "Provides documentation navigation for Unity messages."
+        },
+        "unitySWpack.unityEventLens": {
+          "type": "boolean",
+          "default": true,
+          "description": "Indicates Unity event bindings."
+        }
+      }
     },
     "snippets": [
       {
@@ -73,12 +78,12 @@
       }
     ],
     "themes": [
-			{
-				"label": "Unity SW Theme",
-				"uiTheme": "vs-dark",
-				"path": "./theme/unity-sw-theme.json"
-			}
-		],
+      {
+        "label": "Unity SW Theme",
+        "uiTheme": "vs-dark",
+        "path": "./theme/unity-sw-theme.json"
+      }
+    ],
     "menus": {
       "editor/context": [
         {
@@ -122,6 +127,7 @@
   },
   "devDependencies": {
     "@types/glob": "^8.1.0",
+    "@types/js-yaml": "^4.0.5",
     "@types/mocha": "^10.0.1",
     "@types/node": "^16.18.23",
     "@types/vscode": "^1.76.0",
@@ -132,5 +138,11 @@
     "glob": "^8.1.0",
     "mocha": "^10.2.0",
     "typescript": "^4.9.5"
+  },
+  "dependencies": {
+    "@vscode-logging/logger": "^1.2.3",
+    "antlr4ts": "^0.5.0-alpha.4",
+    "inflection": "^2.0.1",
+    "js-yaml": "^4.1.0"
   }
 }
