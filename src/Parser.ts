@@ -1,4 +1,6 @@
-import * as snippet from "./snippets.json";
+import { env } from "vscode";
+import * as snippet from "./snippets/en.json";
+import * as snippetKo from "./snippets/ko.json";
 
 export default class Parser {
     private findBehaviourExp = new RegExp(/class.*: *(Mono|Network)Behaviour/);
@@ -10,11 +12,23 @@ export default class Parser {
     constructor() {
         let methodNames = "";
 
-        for (const msg of Object.values(snippet)) {
-            methodNames += msg.prefix;
-
-            if (Object.values(snippet).indexOf(msg) < Object.values(snippet).length - 1) {
-                methodNames += "|";
+        const language = env.language;
+        if (language === 'ko') {
+            for (const msg of Object.values(snippetKo)) {
+                methodNames += msg.prefix;
+    
+                if (Object.values(snippetKo).indexOf(msg) < Object.values(snippetKo).length - 1) {
+                    methodNames += "|";
+                }
+            }
+        }
+        else {
+            for (const msg of Object.values(snippet)) {
+                methodNames += msg.prefix;
+    
+                if (Object.values(snippet).indexOf(msg) < Object.values(snippet).length - 1) {
+                    methodNames += "|";
+                }
             }
         }
 

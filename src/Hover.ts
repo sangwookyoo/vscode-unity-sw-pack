@@ -1,6 +1,7 @@
 import { Hover, HoverProvider, Position, ProviderResult, TextDocument } from "vscode";
-import { parser } from "./extension";
-import * as snippet from "./snippets.json";
+import { parser, language } from "./extension";
+import * as snippet from "./snippets/en.json";
+import * as snippetKo from "./snippets/ko.json";
 
 export default class UnityMessageHoverProvider implements HoverProvider {
     provideHover(doc: TextDocument, pos: Position): ProviderResult<Hover> {
@@ -13,7 +14,10 @@ export default class UnityMessageHoverProvider implements HoverProvider {
         const name = parser.findMethodsName(line);
         if (name === undefined) return;
 
-        const msg = Object.values(snippet).find((msg) => msg.prefix === name);
+        let msg;
+        if (language === 'ko') msg = Object.values(snippetKo).find((msg) => msg.prefix === name);
+        else msg = Object.values(snippet).find((msg) => msg.prefix === name);
+
         if (msg !== undefined) {
             const nameIndex = line.indexOf(name);
             const range = doc.getWordRangeAtPosition(new Position(pos.line, nameIndex));

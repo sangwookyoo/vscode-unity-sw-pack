@@ -1,5 +1,5 @@
 import { CodeLensProvider, TextDocument, ProviderResult, CodeLens, Command, window, Position, Range } from "vscode";
-import { parser } from "./extension";
+import { parser, language } from "./extension";
 
 export class TypeToggleProvider implements CodeLensProvider {
     provideCodeLenses(doc: TextDocument): ProviderResult<CodeLens[]> {
@@ -14,11 +14,21 @@ export class TypeToggleProvider implements CodeLensProvider {
             const returnType = parser.findReturnType(line);
             if (returnType === undefined) continue;
 
-            let cmd: Command = {
-                command: "unitySWpack.changeReturnType",
-                title: "$(symbol-property) Type toggle",
-                arguments: [returnType, i]
-            };
+            let cmd: Command;
+            if (language === 'ko') {
+                cmd = {
+                    command: "unitySWpack.changeReturnType",
+                    title: "$(symbol-property) 타입 토글",
+                    arguments: [returnType, i]
+                };
+            }
+            else {
+                cmd = {
+                    command: "unitySWpack.changeReturnType",
+                    title: "$(symbol-property) Type toggle",
+                    arguments: [returnType, i]
+                };
+            }
 
             list.push(new CodeLens(doc.lineAt(i).range, cmd));
         }

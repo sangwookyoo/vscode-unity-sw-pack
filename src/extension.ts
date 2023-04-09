@@ -1,4 +1,4 @@
-import { workspace, ExtensionContext, ConfigurationTarget, languages, commands } from "vscode";
+import { workspace, ExtensionContext, ConfigurationTarget, languages, commands, env } from "vscode";
 import AssetParser from "./AssetParser";
 import Parser from "./Parser";
 import { UnityEventMessageProvider } from "./UnityEventMessage";
@@ -8,12 +8,15 @@ import { TypeToggleProvider, returnMethodType } from "./TypeToggle";
 import { searchUnityDocs } from "./SearchUnityDocs";
 
 import * as fs from 'fs';
+import * as path from 'path';
 import * as metaFileSync from "./MetaFileSync";
 
 import * as unityLens from "./event-lens/unity-lens";
 
 export const parser = new Parser();
 export const assetParser = new AssetParser();
+
+export const language = env.language;
 
 const unitySWpack = workspace.getConfiguration('unitySWpack');
 const unityEventMessageEnabled = unitySWpack.get('unityEventMessage');
@@ -25,6 +28,25 @@ const searchInUnityDocsEnabled = unitySWpack.get('searchInUnityDocs');
 const unityEventLensEnabled = unitySWpack.get('unityEventLens');
 
 export function activate(context: ExtensionContext) {
+    let snippetsConfig;
+    if (language === 'ko') {
+        snippetsConfig = {
+            "language": "csharp",
+            "path": `./out/snippets/ko.json`
+        };
+    }
+    else {
+        snippetsConfig = {
+            "language": "csharp",
+            "path": `./out/snippets/en.json`
+        };
+    }
+
+    const packageJSONPath = path.join(context.extensionPath, 'package.json');
+    const packageJSON = JSON.parse(fs.readFileSync(packageJSONPath, 'utf-8'));
+    packageJSON.contributes.snippets = [snippetsConfig];
+    fs.writeFileSync(packageJSONPath, JSON.stringify(packageJSON, null, 4));
+    
     if (workspace.getConfiguration('omnisharp')) {
         const omnisharp = workspace.getConfiguration('omnisharp');
         omnisharp.update('useModernNet', false, ConfigurationTarget.Global);

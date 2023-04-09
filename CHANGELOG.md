@@ -17,7 +17,7 @@ Check [Keep a Changelog](https://github.com/sangwookyoo/vscode-unity-sw-pack/) f
 
 ## [0.0.4 Released]
 
-- Support English.
+- Support for English as the default langauge.
 
 ## [0.0.5 Released]
 
@@ -26,3 +26,7 @@ Check [Keep a Changelog](https://github.com/sangwookyoo/vscode-unity-sw-pack/) f
 ## [0.0.6 Released]
 
 - Added feature that Indicates Unity event function.
+
+## [0.0.7 Released]
+
+- Support for Korean has been hard-coded.

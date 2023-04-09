@@ -1,6 +1,5 @@
 import { CodeLens, CodeLensProvider, Command, ProviderResult, TextDocument } from 'vscode';
-import { parser } from './extension';
-import { assetParser } from './extension';
+import { assetParser, parser, language } from './extension';
 
 export class UsageScenePrefabProvider implements CodeLensProvider {
     provideCodeLenses(doc: TextDocument): ProviderResult<CodeLens[]> {
@@ -34,7 +33,8 @@ export class UsageScenePrefabProvider implements CodeLensProvider {
     }
 
     formatTitle(word: string, count: number): string {
-        return `$(symbol-field) ${word} ${count} references`;
+        if (language === 'ko') return `$(symbol-field) ${word} 참조 ${count}개`;
+        else return `$(symbol-field) ${word} ${count} references`;
     }
 
     formatTooltip(refs: string[], extensionLength: number): string {
