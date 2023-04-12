@@ -8,7 +8,7 @@
 <img src="https://img.shields.io/badge/Unity%20SW%20Pack%20v0.0.8%20-%23000000.svg?&style=flat&logo=unity&logoColor=white" style="height : auto; margin-left : 2px; margin-right : 2px;"/>
 </p>
 
-## OverView
+## Overview
 - This extension provides a Unity development environment for VS Code.
 
 **Features**
