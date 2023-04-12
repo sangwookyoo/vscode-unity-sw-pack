@@ -10,14 +10,9 @@ export class UnityEventMessageProvider implements CodeLensProvider {
             const line = lines[i];
 
             if (!parser.hasUnityMessage(line)) continue;
-            if (!parser.isInBehaviour(lines, i)) continue;
 
-            const behaviour = parser.findBehaviour(lines);
-            if (behaviour === undefined) continue;
-            const openingLine = parser.findOpeningBracket(lines, behaviour);
-            if (openingLine === undefined) continue;
-
-            if (!parser.isLineOnBracketsLevel(lines, openingLine, i) && parser.findMethodsName(line) === undefined) continue;
+            const methodsName = parser.findMethodsName(line);
+            if (methodsName === undefined) continue;
 
             let cmd: Command;
             if (language === 'ko')

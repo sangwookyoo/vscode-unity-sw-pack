@@ -16,20 +16,20 @@ export class UsageScenePrefabProvider implements CodeLensProvider {
     }
 
     getCodeLenses(list: CodeLens[], doc: TextDocument, lines: string[], guid: string, assets: Set<string>, type: string, tooltipLength: number) {
-        const behaviour = parser.findBehaviour(lines);
-        if (behaviour === undefined) return;
+        const className = parser.findClassName(lines);
+        if (className === undefined) return;
 
-        const refs = assetParser.findReferences(guid, assets);
-        const title = this.formatTitle(type, refs.length);
-        const tooltip = this.formatTooltip(refs, tooltipLength);
+            const refs = assetParser.findReferences(guid, assets);
+            const title = this.formatTitle(type, refs.length);
+            const tooltip = this.formatTooltip(refs, tooltipLength);
 
-        const cmd: Command = {
-            command: "",
-            title: title,
-            tooltip: tooltip,
-        };
+            const cmd: Command = {
+                command: "",
+                title: title,
+                tooltip: tooltip,
+            };
 
-        list.push(new CodeLens(doc.lineAt(behaviour).range, cmd));
+            list.push(new CodeLens(doc.lineAt(className).range, cmd));
     }
 
     formatTitle(word: string, count: number): string {

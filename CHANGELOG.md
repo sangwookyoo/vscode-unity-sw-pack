@@ -29,4 +29,8 @@ Check [Keep a Changelog](https://github.com/sangwookyoo/vscode-unity-sw-pack/) f
 
 ## [0.0.7 Released]
 
-- Support for Korean has been hard-coded.
+- Support for Korean.
+
+## [0.0.8 Released]
+
+- Improved 'Parser' performance.
