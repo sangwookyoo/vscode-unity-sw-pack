@@ -12,6 +12,7 @@
 - This extension provides a Unity development environment for VS Code.
 
 **Features**
+> All features can be turned on or off in the settings!
 - ✅ [Provides code snippets for Unity](#provides-code-snippets-for-unity)
 	- <details>
 		<summary>List of code snippets</summary>
@@ -101,7 +102,7 @@
 			- `Reset()`
 			- `Start()`
 			- `Update()`
-		</details>
+	</details>
 - ✅ [[ON/OFF] Shows Scene and Prefab referenced by Script](#shows-scene-and-prefab-referenced-by-script)
 - ✅ [[ON/OFF] Indicates Unity event bindings](#indicates-unity-event-bindings)
 - ✅ [[ON/OFF] Indicates Unity event function](#indicates-unity-event-function)
@@ -110,7 +111,6 @@
 - ✅ [[ON/OFF] Checks for changes in .meta files and syncs them if there are any](#checks-for-changes-in-meta-files-and-syncs-them-if-there-are-any)
 - ✅ [ON/OFF] Provides documentation navigation for Unity messages. (Shortcut: Shift+1)
 - ✅ [ON/OFF] Provides theme 'Unity SW Pack Dark'
-> All features can be turned on or off in the settings!
 
 **Installation**
 - Install the extension from the [Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=SangwookYoo.unity-sw-pack).
