@@ -34,3 +34,7 @@ Check [Keep a Changelog](https://github.com/sangwookyoo/vscode-unity-sw-pack/) f
 ## [0.0.8 Released]
 
 - Improved 'Parser' performance.
+
+## [1.0 Released]
+
+- Renaming 'Type toggle' → 'Change coroutine'.

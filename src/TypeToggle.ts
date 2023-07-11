@@ -16,14 +16,14 @@ export class TypeToggleProvider implements CodeLensProvider {
             if (language === 'ko') {
                 cmd = {
                     command: "unitySWpack.changeReturnType",
-                    title: "$(symbol-property) 타입 토글",
+                    title: "$(symbol-property) 코루틴 변경",
                     arguments: [returnType, i]
                 };
             }
             else {
                 cmd = {
                     command: "unitySWpack.changeReturnType",
-                    title: "$(symbol-property) Type toggle",
+                    title: "$(symbol-property) Change coroutine",
                     arguments: [returnType, i]
                 };
             }

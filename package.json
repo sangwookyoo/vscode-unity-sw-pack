@@ -2,9 +2,16 @@
     "name": "unity-sw-pack",
     "displayName": "Unity SW Pack",
     "description": "Unity Extension for Visual Studio Code",
-    "version": "0.0.8",
+    "version": "1.0.0",
     "publisher": "SangwookYoo",
     "icon": "images/icon.png",
+    "badges": [
+        {
+          "description": "PayPal Donate",
+          "url": "https://img.shields.io/badge/Donate-PayPal-green.svg",
+          "href": "https://paypal.me/sangwookyoo"
+        }
+      ],
     "license": "MIT",
     "repository": {
         "type": "git",
@@ -52,7 +59,7 @@
                 "unitySWpack.typeToggle": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Provide function signature change (Type toggle) between void-IEnumerator."
+                    "description": "Provide function signature change between void-IEnumerator."
                 },
                 "unitySWpack.metaFileSync": {
                     "type": "boolean",
