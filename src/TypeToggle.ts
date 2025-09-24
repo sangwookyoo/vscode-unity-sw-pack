@@ -1,66 +1,77 @@
-import { CodeLensProvider, TextDocument, ProviderResult, CodeLens, Command, window, Position, Range } from "vscode";
+import {
+    CodeLensProvider,
+    TextDocument,
+    ProviderResult,
+    CodeLens,
+    Command,
+    window,
+    Position,
+    Range,
+} from "vscode";
 import { parser, language } from "./extension";
+
+const methodRegExp =
+    /(?:public|private|protected)?\s+(?:static\s+)?(?<returnType>[^\s]+)\s+(?<methodName>\w+)\s*\((?<parameters>[^)]*)\)/;
+
+function getLocalizedCommandTitle(): string {
+    if (language === "ko") {
+        return "$(symbol-property) 코루틴 변경";
+    }
+    return "$(symbol-property) Change coroutine";
+}
 
 export class TypeToggleProvider implements CodeLensProvider {
     provideCodeLenses(doc: TextDocument): ProviderResult<CodeLens[]> {
-        const lines = doc.getText().split('\n');
-        const list = [];
+        const lenses: CodeLens[] = [];
+        const lines = doc.getText().split("\n");
+        const commandTitle = getLocalizedCommandTitle();
 
         for (let i = 0; i < lines.length; i++) {
-            const line = lines[i];
+            const returnType = parser.findReturnType(lines[i]);
+            if (!returnType) continue;
 
-            const returnType = parser.findReturnType(line);
-            if (returnType === undefined) continue;
+            const cmd: Command = {
+                command: "unitySWpack.changeReturnType",
+                title: commandTitle,
+                arguments: [returnType, i],
+            };
 
-            let cmd: Command;
-            if (language === 'ko') {
-                cmd = {
-                    command: "unitySWpack.changeReturnType",
-                    title: "$(symbol-property) 코루틴 변경",
-                    arguments: [returnType, i]
-                };
-            }
-            else {
-                cmd = {
-                    command: "unitySWpack.changeReturnType",
-                    title: "$(symbol-property) Change coroutine",
-                    arguments: [returnType, i]
-                };
-            }
-
-            list.push(new CodeLens(doc.lineAt(i).range, cmd));
+            lenses.push(new CodeLens(doc.lineAt(i).range, cmd));
         }
 
-        return list;
+        return lenses;
     }
 }
 
-export function returnMethodType(returnType: string, line: number) {
+export async function returnMethodType(returnType: string, line: number) {
     const editor = window.activeTextEditor;
-    if (editor === undefined) return;
+    if (!editor) return;
 
-    if (returnType === 'void') {
-        returnType = 'IEnumerator';
-    } else if (returnType === 'IEnumerator') {
-        returnType = 'void';
-    }
+    let newReturnType: string | undefined;
+    if (returnType === "void") newReturnType = "IEnumerator";
+    else if (returnType === "IEnumerator") newReturnType = "void";
+    else return;
 
-    if (!editor.document.lineAt(0).text.includes('using System.Collections;')) {
-        editor.edit((editBuilder) => {
-            editBuilder.insert(new Position(0, 0), 'using System.Collections;\n');
-        });
-    }
-
-    const methodRegExp = /(?:public|private|protected)?\s+(?:static\s+)?(?<returnType>[^\s]+)\s+(?<methodName>\w+)\s*\((?<parameters>[^)]*)\)/;
     const document = editor.document;
     const lineText = document.lineAt(line).text;
-    const methodMatch = methodRegExp.exec(lineText);
-    if (methodMatch && methodMatch.groups) {
-        const { returnType: oldReturnType } = methodMatch.groups;
-        const returnTypeIndex = lineText.indexOf(oldReturnType);
-        const range = new Range(line, returnTypeIndex, line, returnTypeIndex + oldReturnType.length);
-        editor.edit((editBuilder) => {
-            editBuilder.replace(range, returnType);
-        });
-    }
+    const match = methodRegExp.exec(lineText);
+
+    if (!match?.groups) return;
+
+    const { returnType: oldReturnType } = match.groups;
+    const returnTypeIndex = lineText.indexOf(oldReturnType);
+    const range = new Range(line, returnTypeIndex, line, returnTypeIndex + oldReturnType.length);
+
+    await editor.edit((editBuilder) => {
+        // 반환형 교체
+        editBuilder.replace(range, newReturnType!);
+
+        // using 추가 (없을 때만)
+        if (
+            newReturnType === "IEnumerator" &&
+            !document.lineAt(0).text.includes("using System.Collections;")
+        ) {
+            editBuilder.insert(new Position(0, 0), "using System.Collections;\n");
+        }
+    });
 }

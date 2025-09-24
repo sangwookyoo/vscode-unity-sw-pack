@@ -1,66 +1,45 @@
 import { env } from "vscode";
-import * as snippet from "./snippets/en.json";
+import * as snippetEn from "./snippets/en.json";
 import * as snippetKo from "./snippets/ko.json";
 
 export default class Parser {
-    private findMethodNameExp = new RegExp(/(?:void|IEnumerator) *(.*?) *\(.*\)/);
-    private findReturnTypeExp = new RegExp(/(?:public|private|protected)?\s+(?:static\s+)?(void|IEnumerator)\s+(\w+)\s*\(/);
-    private hasUnityMessageExp: RegExp;
-    private hasUnityMessageIEnumeratorExp = new RegExp("IEnumerator *Start *\(\)");
+    private readonly methodNameRegex: RegExp;
+    private readonly returnTypeRegex: RegExp;
+    private readonly unityMessageRegex: RegExp;
+    private readonly unityMessageIEnumeratorRegex = /^IEnumerator\s+Start\s*\(\s*\)/;
+    private readonly classRegex = /\bclass\s+\w+/;
 
     constructor() {
-        let methodNames = "";
+        this.methodNameRegex = /(?:void|IEnumerator)\s+(\w+)\s*\(.*\)/;
+        this.returnTypeRegex = /(?:public|private|protected)?\s+(?:static\s+)?(void|IEnumerator)\s+(\w+)\s*\(/;
 
+        // 언어에 따른 메시지 prefix 배열 생성
         const language = env.language;
-        if (language === 'ko') {
-            for (const msg of Object.values(snippetKo)) {
-                methodNames += msg.prefix;
-    
-                if (Object.values(snippetKo).indexOf(msg) < Object.values(snippetKo).length - 1) {
-                    methodNames += "|";
-                }
-            }
-        }
-        else {
-            for (const msg of Object.values(snippet)) {
-                methodNames += msg.prefix;
-    
-                if (Object.values(snippet).indexOf(msg) < Object.values(snippet).length - 1) {
-                    methodNames += "|";
-                }
-            }
-        }
+        const snippetSource = language === "ko" ? Object.values(snippetKo) : Object.values(snippetEn);
 
-        this.hasUnityMessageExp = new RegExp("void *(" + methodNames + ") *\\(.*\\)");
+        const prefixes = snippetSource.map((msg: any) => this.escapeRegExp(msg.prefix));
+        this.unityMessageRegex = new RegExp(`\\bvoid\\s+(${prefixes.join("|")})\\s*\\(.*\\)`);
     }
 
     hasUnityMessage(line: string): boolean {
-        return this.hasUnityMessageExp.test(line) || this.hasUnityMessageIEnumeratorExp.test(line);
+        return this.unityMessageRegex.test(line) || this.unityMessageIEnumeratorRegex.test(line);
     }
 
     findReturnType(line: string): string | undefined {
-        const matches = line.match(this.findReturnTypeExp);
-
-        if (matches !== null) {
-            return matches[1];
-        }
+        const match = this.returnTypeRegex.exec(line);
+        return match ? match[1] : undefined;
     }
 
     findMethodsName(line: string): string | undefined {
-        const matches = line.match(this.findMethodNameExp);
-
-        if (matches !== null) {
-            return matches[1];
-        }
+        const match = this.methodNameRegex.exec(line);
+        return match ? match[1] : undefined;
     }
 
     findClassName(lines: string[]): number | undefined {
-        for (let i = 0; i < lines.length; i++) {
-            const line = lines[i];
+        return lines.findIndex(line => this.classRegex.test(line));
+    }
 
-            if (line.includes("class")) {
-                return i;
-            }
-        }
+    private escapeRegExp(str: string): string {
+        return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     }
 }

@@ -2,16 +2,9 @@
     "name": "unity-sw-pack",
     "displayName": "Unity SW Pack",
     "description": "Unity Extension for Visual Studio Code",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "publisher": "SangwookYoo",
     "icon": "images/icon.png",
-    "badges": [
-        {
-          "description": "PayPal Donate",
-          "url": "https://img.shields.io/badge/Donate-PayPal-green.svg",
-          "href": "https://paypal.me/sangwookyoo"
-        }
-      ],
     "license": "MIT",
     "repository": {
         "type": "git",
@@ -44,37 +37,37 @@
                 "unitySWpack.unityEventMessage": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Indicates Unity event function."
+                    "description": "Displays a CodeLens above Unity lifecycle methods (e.g., Awake, Start, Update)."
                 },
                 "unitySWpack.usageScenePrefab": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Shows Scene and Prefab referenced by Script."
+                    "description": "Shows a CodeLens indicating how many Scenes and Prefabs reference the current script."
                 },
                 "unitySWpack.unityMessageHover": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Displays explanations of Unity messages on Hover."
+                    "description": "Shows a description of Unity lifecycle methods when you hover over them."
                 },
                 "unitySWpack.typeToggle": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Provide function signature change between void-IEnumerator."
+                    "description": "Adds a CodeLens to toggle a method's return type between 'void' and 'IEnumerator' for coroutines."
                 },
                 "unitySWpack.metaFileSync": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Checks for changes in .meta files and syncs them if there are any."
+                    "description": "Automatically manages .meta files when files are created, deleted, or renamed in the editor."
                 },
                 "unitySWpack.searchInUnityDocs": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Provides documentation navigation for Unity messages."
+                    "description": "Adds a command to search for the selected API or keyword in the official Unity Documentation."
                 },
                 "unitySWpack.unityEventLens": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Indicates Unity event bindings."
+                    "description": "Displays a CodeLens for methods linked to UnityEvents in the Inspector (e.g., Button.onClick)."
                 }
             }
         },

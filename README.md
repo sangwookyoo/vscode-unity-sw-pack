@@ -3,61 +3,68 @@
     <img src="https://github.com/sangwookyoo/vscode-unity-sw-pack/blob/master/images/icon.png?raw=true" width="150px" />
   </a>
   <br/>
-  </p>
-<p align="center">
-<img src="https://img.shields.io/badge/Unity%20SW%20Pack%20v1.0.0%20-%23000000.svg?&style=flat&logo=unity&logoColor=white" style="height : auto; margin-left : 2px; margin-right : 2px;"/>
-<a href="https://paypal.me/sangwookyoo"><img src="https://img.shields.io/badge/Donate-PayPal-green.svg" style="height : auto; margin-left : 2px; margin-right : 2px;"/></a>
 </p>
 
 ## Overview
-- This extension provides a Unity development environment for VS Code.
-> All features can be turned on or off in the settings!
-- Provides code snippets for Unity
-- Shows Scene and Prefab referenced by Script
-- Indicates Unity event bindings
-- Indicates Unity event function
-- Displays explanations of Unity messages on Hover
-- Provide function signature change between void-IEnumerator
-- Checks for changes in .meta files and syncs them if there are any
-- Provides documentation navigation for Unity messages. (Shortcut: Shift+1)
-- Provides theme 'Unity SW Pack Dark'
+This extension provides a Unity development environment for VS Code.  
+> All features can be enabled or disabled in the settings.
 
-**Prerequisites**
+### Features
+- **Unity code snippets** (C#)
+- **Scene / Prefab usage references**  
+  Shows where a script is used inside Scene or Prefab assets.
+- **Unity event bindings indicator**  
+  Displays CodeLens above UnityEvent fields.
+- **Unity message indicator**  
+  Adds CodeLens above Unity lifecycle methods (e.g., `Start`, `Update`).
+- **Unity message hover descriptions**  
+  Shows documentation/explanation of Unity lifecycle methods when hovering.
+- **Coroutine toggle (void ↔ IEnumerator)**  
+  Quickly change method return type between `void` and `IEnumerator`.
+- **.meta file sync**  
+  Detects creation/deletion of assets and keeps `.meta` files in sync.
+- **Unity documentation search**  
+  Search Unity API docs directly (shortcut: `Shift+1`).  
+  → Works with selection or the word under the cursor.
+- **Theme**  
+  Includes `Unity SW Pack Dark` theme.
+
+---
+
+## Prerequisites
 1. Install the [VS Code C# Extension](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp).
-2. Install the [.NET SDK](https://dotnet.microsoft.com/download), which includes the Runtime and the dotnet command.
-- [Windows only] Logout or restart Windows to allow changes to %PATH% to take effect.
-- [macOS only] To avoid seeing "Some projects have trouble loading. Please review the output for more details", make sure to install the latest stable [Mono](https://www.mono-project.com/download/) release.
+2. Install the [.NET SDK](https://dotnet.microsoft.com/download), which includes the Runtime and the `dotnet` command.
+   - **Windows only**: Logout or restart Windows to allow changes to `%PATH%` to take effect.
+   - **macOS only**: To avoid seeing "Some projects have trouble loading. Please review the output for more details", install the latest stable [Mono](https://www.mono-project.com/download/) release.
 
-> Install Build Tools for Visual Studio (Windows only)
-> - The C# extension no longer ships with Microsoft Build Tools so they must be installed manually.
-> - Download the [Build Tools for Visual Studio 2022](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2022).
-> - Install the <b>.NET desktop build tools</b> workload. No other components are required.
+---
 
-**Features**
-- Provides code snippets for Unity.
+## Features in Action
 
-	![CodeSnippets](gifs/01.gif)
+- **Unity code snippets**
 
-- Shows Scene and Prefab referenced by Script.
+  ![CodeSnippets](gifs/01.gif)
 
-	![UsageScenePrefab](gifs/02.gif)
+- **Scene and Prefab references**
 
-- Indicates Unity event bindings.
+  ![UsageScenePrefab](gifs/02.gif)
 
-	![UnityEventBinding](gifs/03.gif)
+- **Unity event bindings**
 
-- Indicates Unity event function.
+  ![UnityEventBinding](gifs/03.gif)
 
-	![UnityEventMessage](gifs/04.gif)
+- **Unity message indicator**
 
-- Displays explanations of Unity messages on Hover.
+  ![UnityEventMessage](gifs/04.gif)
 
-	![Hover](gifs/05.gif)
+- **Unity message hover descriptions**
 
-- Provide function signature change between void-IEnumerator.
+  ![Hover](gifs/05.gif)
 
-	![TypeToggle](gifs/06.gif)
+- **Coroutine toggle (void ↔ IEnumerator)**
 
-- Checks for changes in .meta files and syncs them if there are any.
+  ![TypeToggle](gifs/06.gif)
 
-	![metaFile](gifs/07.gif)
+- **.meta file sync**
+
+  ![metaFile](gifs/07.gif)

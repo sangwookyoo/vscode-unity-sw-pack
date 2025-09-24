@@ -1,48 +1,52 @@
-import { CodeLens, CodeLensProvider, Command, ProviderResult, TextDocument } from 'vscode';
-import { assetParser, parser, language } from './extension';
+import { CodeLens, CodeLensProvider, Command, ProviderResult, TextDocument } from "vscode";
+import { assetParser, parser, language } from "./extension";
+import * as path from "path";
+
+function getLocalizedTitle(type: string, count: number): string {
+    if (language === "ko") {
+        return `$(symbol-field) ${type} 참조 ${count}개`;
+    }
+    return `$(symbol-field) ${type} ${count} references`;
+}
+
+function formatTooltip(refs: string[], baseDir: string): string {
+    return refs
+        .map((filePath) => {
+            const relative = path.relative(baseDir, filePath);
+            return relative.replace(/\\/g, "/"); // 경로 구분자 통일
+        })
+        .join("\n");
+}
 
 export class UsageScenePrefabProvider implements CodeLensProvider {
     provideCodeLenses(doc: TextDocument): ProviderResult<CodeLens[]> {
-        const lines = doc.getText().split('\n');
-        const list: CodeLens[] = [];
-
+        const lenses: CodeLens[] = [];
         const guid = assetParser.getGuid(doc.fileName);
-        if (guid === undefined) return;
+        if (!guid) return;
 
-        this.getCodeLenses(list, doc, lines, guid, assetParser.scenes, "Scene", 6);
-        this.getCodeLenses(list, doc, lines, guid, assetParser.prefabs, "Prefab", 7);
+        const lines = doc.getText().split("\n");
+        const classLine = parser.findClassName(lines);
+        if (classLine === undefined) return;
 
-        return list;
-    }
+        const baseDir = path.join(doc.uri.fsPath.split("Assets")[0], "Assets");
 
-    getCodeLenses(list: CodeLens[], doc: TextDocument, lines: string[], guid: string, assets: Set<string>, type: string, tooltipLength: number) {
-        const className = parser.findClassName(lines);
-        if (className === undefined) return;
-
-            const refs = assetParser.findReferences(guid, assets);
-            const title = this.formatTitle(type, refs.length);
-            const tooltip = this.formatTooltip(refs, tooltipLength);
+        [
+            { type: "Scene", set: assetParser.scenes, ext: ".unity" },
+            { type: "Prefab", set: assetParser.prefabs, ext: ".prefab" },
+        ].forEach(({ type, set, ext }) => {
+            const refs = assetParser.findReferences(guid, set);
+            const title = getLocalizedTitle(type, refs.length);
+            const tooltip = formatTooltip(refs, baseDir);
 
             const cmd: Command = {
-                command: "",
-                title: title,
-                tooltip: tooltip,
+                command: "", // 안내용 CodeLens
+                title,
+                tooltip,
             };
 
-            list.push(new CodeLens(doc.lineAt(className).range, cmd));
-    }
+            lenses.push(new CodeLens(doc.lineAt(classLine).range, cmd));
+        });
 
-    formatTitle(word: string, count: number): string {
-        if (language === 'ko') return `$(symbol-field) ${word} 참조 ${count}개`;
-        else return `$(symbol-field) ${word} ${count} references`;
-    }
-
-    formatTooltip(refs: string[], extensionLength: number): string {
-        return refs
-            .map((prefab) => {
-                const name = prefab.slice(0, prefab.length - extensionLength);
-                return `${name.substring(name.indexOf("Assets\\"))}\n`;
-            })
-            .join("");
+        return lenses;
     }
 }
