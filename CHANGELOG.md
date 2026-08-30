@@ -10,7 +10,7 @@
 This project follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), so the newest
 release is listed first.
 
-## [3.0 Released]
+## [2.1 Released]
 
 ### Changed
 

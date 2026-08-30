@@ -10,7 +10,7 @@
 이 프로젝트는 [Keep a Changelog](https://keepachangelog.com/ko/1.1.0/)를 따르며, 최신 릴리스를
 가장 위에 둡니다.
 
-## [3.0 Released]
+## [2.1 Released]
 
 ### 변경
 

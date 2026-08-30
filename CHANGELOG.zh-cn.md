@@ -9,7 +9,7 @@
 
 本项目遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，最新版本列在最前面。
 
-## [3.0 Released]
+## [2.1 Released]
 
 ### 变更
 

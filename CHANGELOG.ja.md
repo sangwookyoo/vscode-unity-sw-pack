@@ -10,7 +10,7 @@
 このプロジェクトは [Keep a Changelog](https://keepachangelog.com/ja/1.1.0/) に従い、最新の
 リリースを先頭に置いています。
 
-## [3.0 Released]
+## [2.1 Released]
 
 ### 変更
 

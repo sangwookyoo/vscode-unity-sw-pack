@@ -1,5 +1,23 @@
-out
-dist
-node_modules
-.vscode-test/
+# Build output
+out/
+dist/
+*.tsbuildinfo
+
+# Dependencies
+node_modules/
+
+# Packaged extension
 *.vsix
+
+# Test and tool caches
+.vscode-test/
+.eslintcache
+coverage/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS cruft
+.DS_Store
+Thumbs.db

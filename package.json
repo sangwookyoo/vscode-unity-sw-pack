@@ -2,7 +2,7 @@
   "name": "unity-sw-pack",
   "displayName": "%ext.displayName%",
   "description": "%ext.description%",
-  "version": "3.0.0",
+  "version": "2.1.0",
   "publisher": "SangwookYoo",
   "icon": "images/icon.png",
   "license": "MIT",
@@ -147,7 +147,8 @@
     "test:unit": "npm run compile && mocha --ui tdd \"out/test/suite/**/*.test.js\" --ignore \"out/test/suite/extension.test.js\"",
     "pretest": "npm run compile && npm run bundle && npm run lint",
     "test": "vscode-test",
-    "vsix": "vsce package --no-dependencies"
+    "vsix": "vsce package --no-dependencies",
+    "build": "npm run compile && npm run bundle"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",
