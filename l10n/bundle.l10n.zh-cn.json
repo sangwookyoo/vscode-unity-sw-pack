@@ -1,0 +1,14 @@
+{
+  "$(symbol-method) Unity Message": "$(symbol-method) Unity 消息",
+  "Unity calls this method for you. You do not need to call it yourself.": "Unity 会自动调用该方法，无需手动调用。",
+  "$(symbol-property) Change coroutine": "$(symbol-property) 切换协程",
+  "$(references) Used in {0} scenes": "$(references) 在 {0} 个场景中使用",
+  "$(references) Used in {0} prefabs": "$(references) 在 {0} 个预制件中使用",
+  "$(link) {0} Unity Event references": "$(link) {0} 处 Unity Event 引用",
+  "Calls {0}.{1}": "调用 {0}.{1}",
+  "Called by {0} on {1} in scene {2}": "由场景 {2} 中 {1} 的 {0} 调用",
+  "Called by {0} on {1} in prefab {2}": "由预制件 {2} 中 {1} 的 {0} 调用",
+  "Select a word or place the cursor on one to search.": "请选中要搜索的词，或将光标放在词上。",
+  "Could not open the browser. Check your default browser setting.": "无法打开浏览器，请检查默认浏览器设置。",
+  "Show Unity Event References": "显示 Unity Event 引用"
+}

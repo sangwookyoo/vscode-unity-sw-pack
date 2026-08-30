@@ -1,0 +1,18 @@
+{
+  "ext.displayName": "Unity SW Pack",
+  "ext.description": "Unity 6 development support for Visual Studio Code: snippets, CodeLens, hover docs, .meta sync and documentation search.",
+  "theme.dark": "Unity SW Pack Dark",
+  "cmd.searchDocs": "Search in Unity Documentation",
+  "cmd.changeCoroutine": "Change coroutine",
+  "cmd.showEventReferences": "Show Unity Event References",
+  "config.title": "Unity SW Pack",
+  "config.unityEventMessage": "Mark the methods Unity calls for you, such as Awake, Start and Update.",
+  "config.usageScenePrefab": "Show how many scenes and prefabs use the current script.",
+  "config.unityMessageHover": "Explain what a Unity message does when you hover over it.",
+  "config.typeToggle": "Offer a one-click switch between void and IEnumerator so a method can become a coroutine.",
+  "config.metaFileSync": "Keep .meta files in step when you rename or delete assets in the editor.",
+  "config.searchInUnityDocs": "Add a command that searches the selected word in the Unity documentation for your project version.",
+  "config.unityEventLens": "Show where a method or UnityEvent field is wired up in scenes and prefabs.",
+  "config.onlyScenesInBuildSettings": "Only read UnityEvent wiring from the scenes listed in EditorBuildSettings. Reference counts still cover every scene.",
+  "config.debugLogging": "Write indexing details to the Unity SW Pack output channel. Turn this on when reporting a problem."
+}

@@ -1,0 +1,14 @@
+{
+  "$(symbol-method) Unity Message": "$(symbol-method) Unity 메시지",
+  "Unity calls this method for you. You do not need to call it yourself.": "Unity가 자동으로 호출하는 메서드예요. 직접 부르지 않아도 돼요.",
+  "$(symbol-property) Change coroutine": "$(symbol-property) 코루틴 변경",
+  "$(references) Used in {0} scenes": "$(references) 씬 {0}곳에서 사용",
+  "$(references) Used in {0} prefabs": "$(references) 프리팹 {0}곳에서 사용",
+  "$(link) {0} Unity Event references": "$(link) Unity 이벤트 참조 {0}개",
+  "Calls {0}.{1}": "{0}.{1}을(를) 호출해요",
+  "Called by {0} on {1} in scene {2}": "{2} 씬의 {1}에서 {0}으로 호출돼요",
+  "Called by {0} on {1} in prefab {2}": "{2} 프리팹의 {1}에서 {0}으로 호출돼요",
+  "Select a word or place the cursor on one to search.": "검색할 단어를 선택하거나 단어 위에 커서를 두세요.",
+  "Could not open the browser. Check your default browser setting.": "브라우저를 열지 못했어요. 기본 브라우저 설정을 확인해 주세요.",
+  "Show Unity Event References": "Unity 이벤트 참조 보기"
+}

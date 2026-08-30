@@ -1,0 +1,348 @@
+[
+  {
+    "name": "Unity MonoBehaviour",
+    "prefix": "MonoBehaviour",
+    "body": ["using UnityEngine;", "", "public class ${TM_FILENAME_BASE} : MonoBehaviour", "{", "\t$0", "}"]
+  },
+  {
+    "name": "Unity ScriptableObject",
+    "prefix": "ScriptableObject",
+    "body": [
+      "using UnityEngine;",
+      "",
+      "[CreateAssetMenu(fileName = \"${1:${TM_FILENAME_BASE}}\", menuName = \"\")]",
+      "public class ${TM_FILENAME_BASE} : ScriptableObject",
+      "{",
+      "\t$0",
+      "}"
+    ]
+  },
+  {
+    "name": "Unity Editor",
+    "prefix": "Editor",
+    "body": [
+      "using UnityEngine;",
+      "using UnityEditor;",
+      "",
+      "[CustomEditor(typeof(${1:${TM_FILENAME_BASE/(.*)Editor/${1}/}}))]",
+      "public class ${TM_FILENAME_BASE} : Editor",
+      "{",
+      "\tpublic override void OnInspectorGUI()",
+      "\t{",
+      "\t\tbase.OnInspectorGUI();",
+      "\t\t$0",
+      "\t}",
+      "}"
+    ]
+  },
+  {
+    "name": "MonoBehaviour Awake",
+    "prefix": "Awake",
+    "body": ["private void Awake()", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour FixedUpdate",
+    "prefix": "FixedUpdate",
+    "body": ["private void FixedUpdate()", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour LateUpdate",
+    "prefix": "LateUpdate",
+    "body": ["private void LateUpdate()", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnAnimatorIK",
+    "prefix": "OnAnimatorIK",
+    "body": ["private void OnAnimatorIK(int layerIndex)", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnAnimatorMove",
+    "prefix": "OnAnimatorMove",
+    "body": ["private void OnAnimatorMove()", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnApplicationFocus",
+    "prefix": "OnApplicationFocus",
+    "body": ["private void OnApplicationFocus(bool focusStatus)", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnApplicationPause",
+    "prefix": "OnApplicationPause",
+    "body": ["private void OnApplicationPause(bool pauseStatus)", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnApplicationQuit",
+    "prefix": "OnApplicationQuit",
+    "body": ["private void OnApplicationQuit()", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnAudioFilterRead",
+    "prefix": "OnAudioFilterRead",
+    "body": ["private void OnAudioFilterRead(float[] data, int channels)", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnBecameInvisible",
+    "prefix": "OnBecameInvisible",
+    "body": ["private void OnBecameInvisible()", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnBecameVisible",
+    "prefix": "OnBecameVisible",
+    "body": ["private void OnBecameVisible()", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnBeforeTransformParentChanged",
+    "prefix": "OnBeforeTransformParentChanged",
+    "body": ["private void OnBeforeTransformParentChanged()", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnCanvasGroupChanged",
+    "prefix": "OnCanvasGroupChanged",
+    "body": ["private void OnCanvasGroupChanged()", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnCollisionEnter",
+    "prefix": "OnCollisionEnter",
+    "body": ["private void OnCollisionEnter(Collision other)", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnCollisionEnter2D",
+    "prefix": "OnCollisionEnter2D",
+    "body": ["private void OnCollisionEnter2D(Collision2D other)", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnCollisionExit",
+    "prefix": "OnCollisionExit",
+    "body": ["private void OnCollisionExit(Collision other)", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnCollisionExit2D",
+    "prefix": "OnCollisionExit2D",
+    "body": ["private void OnCollisionExit2D(Collision2D other)", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnCollisionStay",
+    "prefix": "OnCollisionStay",
+    "body": ["private void OnCollisionStay(Collision other)", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnCollisionStay2D",
+    "prefix": "OnCollisionStay2D",
+    "body": ["private void OnCollisionStay2D(Collision2D other)", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnControllerColliderHit",
+    "prefix": "OnControllerColliderHit",
+    "body": ["private void OnControllerColliderHit(ControllerColliderHit hit)", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnDestroy",
+    "prefix": "OnDestroy",
+    "body": ["private void OnDestroy()", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnDisable",
+    "prefix": "OnDisable",
+    "body": ["private void OnDisable()", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnDrawGizmos",
+    "prefix": "OnDrawGizmos",
+    "body": ["private void OnDrawGizmos()", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnDrawGizmosSelected",
+    "prefix": "OnDrawGizmosSelected",
+    "body": ["private void OnDrawGizmosSelected()", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnEnable",
+    "prefix": "OnEnable",
+    "body": ["private void OnEnable()", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnGUI",
+    "prefix": "OnGUI",
+    "body": ["private void OnGUI()", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnJointBreak",
+    "prefix": "OnJointBreak",
+    "body": ["private void OnJointBreak(float breakForce)", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnJointBreak2D",
+    "prefix": "OnJointBreak2D",
+    "body": ["private void OnJointBreak2D(Joint2D brokenJoint)", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnMouseDown",
+    "prefix": "OnMouseDown",
+    "body": ["private void OnMouseDown()", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnMouseDrag",
+    "prefix": "OnMouseDrag",
+    "body": ["private void OnMouseDrag()", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnMouseEnter",
+    "prefix": "OnMouseEnter",
+    "body": ["private void OnMouseEnter()", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnMouseExit",
+    "prefix": "OnMouseExit",
+    "body": ["private void OnMouseExit()", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnMouseOver",
+    "prefix": "OnMouseOver",
+    "body": ["private void OnMouseOver()", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnMouseUp",
+    "prefix": "OnMouseUp",
+    "body": ["private void OnMouseUp()", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnMouseUpAsButton",
+    "prefix": "OnMouseUpAsButton",
+    "body": ["private void OnMouseUpAsButton()", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnParticleCollision",
+    "prefix": "OnParticleCollision",
+    "body": ["private void OnParticleCollision(GameObject other)", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnParticleSystemStopped",
+    "prefix": "OnParticleSystemStopped",
+    "body": ["private void OnParticleSystemStopped()", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnParticleTrigger",
+    "prefix": "OnParticleTrigger",
+    "body": ["private void OnParticleTrigger()", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnParticleUpdateJobScheduled",
+    "prefix": "OnParticleUpdateJobScheduled",
+    "body": ["private void OnParticleUpdateJobScheduled()", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnPostRender",
+    "prefix": "OnPostRender",
+    "body": ["private void OnPostRender()", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnPreCull",
+    "prefix": "OnPreCull",
+    "body": ["private void OnPreCull()", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnPreRender",
+    "prefix": "OnPreRender",
+    "body": ["private void OnPreRender()", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnRectTransformDimensionsChange",
+    "prefix": "OnRectTransformDimensionsChange",
+    "body": ["private void OnRectTransformDimensionsChange()", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnRectTransformRemoved",
+    "prefix": "OnRectTransformRemoved",
+    "body": ["private void OnRectTransformRemoved()", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnRenderImage",
+    "prefix": "OnRenderImage",
+    "body": ["private void OnRenderImage(RenderTexture src, RenderTexture dest)", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnRenderObject",
+    "prefix": "OnRenderObject",
+    "body": ["private void OnRenderObject()", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnTransformChildrenChanged",
+    "prefix": "OnTransformChildrenChanged",
+    "body": ["private void OnTransformChildrenChanged()", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnTransformParentChanged",
+    "prefix": "OnTransformParentChanged",
+    "body": ["private void OnTransformParentChanged()", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnTriggerEnter",
+    "prefix": "OnTriggerEnter",
+    "body": ["private void OnTriggerEnter(Collider other)", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnTriggerEnter2D",
+    "prefix": "OnTriggerEnter2D",
+    "body": ["private void OnTriggerEnter2D(Collider2D other)", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnTriggerExit",
+    "prefix": "OnTriggerExit",
+    "body": ["private void OnTriggerExit(Collider other)", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnTriggerExit2D",
+    "prefix": "OnTriggerExit2D",
+    "body": ["private void OnTriggerExit2D(Collider2D other)", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnTriggerStay",
+    "prefix": "OnTriggerStay",
+    "body": ["private void OnTriggerStay(Collider other)", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnTriggerStay2D",
+    "prefix": "OnTriggerStay2D",
+    "body": ["private void OnTriggerStay2D(Collider2D other)", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnValidate",
+    "prefix": "OnValidate",
+    "body": ["private void OnValidate()", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour OnWillRenderObject",
+    "prefix": "OnWillRenderObject",
+    "body": ["private void OnWillRenderObject()", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour Reset",
+    "prefix": "Reset",
+    "body": ["private void Reset()", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour Start",
+    "prefix": "Start",
+    "body": ["private void Start()", "{", "\t$0", "}"]
+  },
+  {
+    "name": "MonoBehaviour Update",
+    "prefix": "Update",
+    "body": ["private void Update()", "{", "\t$0", "}"]
+  },
+  {
+    "name": "Debug Log",
+    "prefix": "Log",
+    "body": "Debug.Log(\\$\"$0\");"
+  },
+  {
+    "name": "Debug Log Warning",
+    "prefix": "LogWarning",
+    "body": "Debug.LogWarning(\\$\"$0\");"
+  },
+  {
+    "name": "Debug Log Error",
+    "prefix": "LogError",
+    "body": "Debug.LogError(\\$\"$0\");"
+  }
+]

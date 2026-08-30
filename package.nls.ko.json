@@ -1,0 +1,18 @@
+{
+  "ext.displayName": "Unity SW Pack",
+  "ext.description": "VS Code에서 Unity 6 개발을 돕습니다. 스니펫, CodeLens, 호버 설명, .meta 동기화, 문서 검색을 제공해요.",
+  "theme.dark": "Unity SW Pack Dark",
+  "cmd.searchDocs": "Unity 문서에서 검색",
+  "cmd.changeCoroutine": "코루틴 변경",
+  "cmd.showEventReferences": "Unity 이벤트 참조 보기",
+  "config.title": "Unity SW Pack",
+  "config.unityEventMessage": "Awake, Start, Update처럼 Unity가 자동으로 호출하는 메서드를 표시해요.",
+  "config.usageScenePrefab": "지금 보는 스크립트를 사용하는 씬과 프리팹이 몇 곳인지 알려줘요.",
+  "config.unityMessageHover": "Unity 메시지에 마우스를 올리면 어떤 역할인지 설명해요.",
+  "config.typeToggle": "void와 IEnumerator를 한 번에 바꿔 메서드를 코루틴으로 만들 수 있어요.",
+  "config.metaFileSync": "에디터에서 에셋의 이름을 바꾸거나 지울 때 .meta 파일을 맞춰줘요.",
+  "config.searchInUnityDocs": "선택한 단어를 프로젝트 버전에 맞는 Unity 문서에서 찾는 명령을 추가해요.",
+  "config.unityEventLens": "메서드나 UnityEvent 필드가 씬과 프리팹의 어디에 연결돼 있는지 보여줘요.",
+  "config.onlyScenesInBuildSettings": "EditorBuildSettings에 등록된 씬에서만 UnityEvent 연결을 읽어요. 참조 개수는 모든 씬을 그대로 세요.",
+  "config.debugLogging": "인덱싱 과정을 Unity SW Pack 출력 채널에 기록해요. 문제를 알릴 때 켜세요."
+}

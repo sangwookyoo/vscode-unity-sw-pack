@@ -1,4 +1,4 @@
-import { window, commands, Uri, Position, workspace } from "vscode";
+import { Position, Uri, commands, l10n, window, workspace } from "vscode";
 import { readDocsVersion } from "./unity-project";
 
 // 프로젝트의 Unity 버전에 맞춘 문서 검색 URL (예: https://docs.unity3d.com/6000.0/Documentation/ScriptReference/30_search.html?q=)
@@ -42,7 +42,7 @@ export async function searchUnityDocs() {
     }
 
     if (!query) {
-        window.showInformationMessage("검색할 Unity API를 선택하거나 커서를 위치시켜 주세요.");
+        window.showInformationMessage(l10n.t("Select a word or place the cursor on one to search."));
         return;
     }
 
@@ -50,7 +50,7 @@ export async function searchUnityDocs() {
         const docsVersion = await getDocsVersion(editor.document.uri);
         await commands.executeCommand("vscode.open", Uri.parse(buildSearchUrl(docsVersion, query)));
     } catch (err) {
-        window.showErrorMessage("Unity 문서 검색을 실행할 수 없습니다.");
+        window.showErrorMessage(l10n.t("Could not open the browser. Check your default browser setting."));
         console.error("searchUnityDocs error:", err);
     }
 }

@@ -1,38 +1,34 @@
+// Hover documentation for Unity message declarations.
 import { Hover, HoverProvider, Position, ProviderResult, TextDocument } from "vscode";
-import { parser, language } from "./extension";
-import * as snippetEn from "./snippets/en.json";
-import * as snippetKo from "./snippets/ko.json";
 
-type SnippetEntry = { prefix: string; description: string };
-
-// prefix → SnippetEntry 매핑 (언어별)
-const snippetMapEn: Map<string, SnippetEntry> = new Map(Object.values(snippetEn).map((msg: any) => [msg.prefix, msg]));
-const snippetMapKo: Map<string, SnippetEntry> = new Map(Object.values(snippetKo).map((msg: any) => [msg.prefix, msg]));
-
-function getMessageByPrefix(prefix: string): SnippetEntry | undefined {
-    return language === "ko" ? snippetMapKo.get(prefix) : snippetMapEn.get(prefix);
-}
+import { SupportedLocale } from "./i18n/locale";
+import { getSnippetDescription } from "./snippet-catalog";
+import UnityMessageParser from "./unity-message-parser";
 
 export default class UnityMessageHoverProvider implements HoverProvider {
-    provideHover(doc: TextDocument, pos: Position): ProviderResult<Hover> {
-        const lineText = doc.lineAt(pos.line).text;
+    constructor(
+        private readonly parser: UnityMessageParser,
+        private readonly locale: SupportedLocale
+    ) {}
 
-        if (!parser.hasUnityMessage(lineText)) {
+    public provideHover(doc: TextDocument, pos: Position): ProviderResult<Hover> {
+        const lineText = doc.lineAt(pos.line).text;
+        if (!this.parser.hasUnityMessage(lineText)) {
             return;
         }
 
-        const methodName = parser.findMethodsName(lineText);
+        const methodName = this.parser.findMethodsName(lineText);
         if (!methodName) {
             return;
         }
 
-        const msg = getMessageByPrefix(methodName);
-        if (!msg) {
+        const description = getSnippetDescription(methodName, this.locale);
+        if (!description) {
             return;
         }
 
         const nameIndex = lineText.indexOf(methodName);
         const range = doc.getWordRangeAtPosition(new Position(pos.line, nameIndex));
-        return new Hover(msg.description, range);
+        return new Hover(description, range);
     }
 }

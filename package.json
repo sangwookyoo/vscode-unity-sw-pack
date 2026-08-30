@@ -1,7 +1,7 @@
 {
   "name": "unity-sw-pack",
-  "displayName": "Unity SW Pack",
-  "description": "Unity Extension for Visual Studio Code",
+  "displayName": "%ext.displayName%",
+  "description": "%ext.description%",
   "version": "2.0.0",
   "publisher": "SangwookYoo",
   "icon": "images/icon.png",
@@ -32,64 +32,58 @@
   "main": "./out/extension.js",
   "contributes": {
     "configuration": {
-      "title": "Unity SW Pack",
+      "title": "%config.title%",
       "properties": {
         "unitySWpack.unityEventMessage": {
           "type": "boolean",
           "default": true,
-          "description": "Displays a CodeLens above Unity lifecycle methods (e.g., Awake, Start, Update)."
+          "description": "%config.unityEventMessage%"
         },
         "unitySWpack.usageScenePrefab": {
           "type": "boolean",
           "default": true,
-          "description": "Shows a CodeLens indicating how many Scenes and Prefabs reference the current script."
+          "description": "%config.usageScenePrefab%"
         },
         "unitySWpack.unityMessageHover": {
           "type": "boolean",
           "default": true,
-          "description": "Shows a description of Unity lifecycle methods when you hover over them."
+          "description": "%config.unityMessageHover%"
         },
         "unitySWpack.typeToggle": {
           "type": "boolean",
           "default": true,
-          "description": "Adds a CodeLens to toggle a method's return type between 'void' and 'IEnumerator' for coroutines."
+          "description": "%config.typeToggle%"
         },
         "unitySWpack.metaFileSync": {
           "type": "boolean",
           "default": true,
-          "description": "Automatically manages .meta files when files are created, deleted, or renamed in the editor."
+          "description": "%config.metaFileSync%"
         },
         "unitySWpack.searchInUnityDocs": {
           "type": "boolean",
           "default": true,
-          "description": "Adds a command to search for the selected API or keyword in the official Unity Documentation."
+          "description": "%config.searchInUnityDocs%"
         },
         "unitySWpack.unityEventLens": {
           "type": "boolean",
           "default": true,
-          "description": "Displays a CodeLens for methods linked to UnityEvents in the Inspector (e.g., Button.onClick)."
+          "description": "%config.unityEventLens%"
         },
         "unitySWpack.onlyScenesInBuildSettings": {
           "type": "boolean",
           "default": false,
-          "description": "Only reads UnityEvent connections from the scenes listed in ProjectSettings/EditorBuildSettings.asset."
+          "description": "%config.onlyScenesInBuildSettings%"
         },
         "unitySWpack.debugLogging": {
           "type": "boolean",
           "default": false,
-          "description": "Writes detailed diagnostic messages to the 'Unity SW Pack' output channel."
+          "description": "%config.debugLogging%"
         }
       }
     },
-    "snippets": [
-      {
-        "language": "csharp",
-        "path": "./out/snippets/en.json"
-      }
-    ],
     "themes": [
       {
-        "label": "Unity SW Pack Dark",
+        "label": "%theme.dark%",
         "uiTheme": "vs-dark",
         "path": "./theme/unity-sw-theme.json"
       }
@@ -112,15 +106,15 @@
     "commands": [
       {
         "command": "unitySWpack.searchInUnityDocumentation",
-        "title": "Search in Unity Documentation"
+        "title": "%cmd.searchDocs%"
       },
       {
         "command": "unitySWpack.changeReturnType",
-        "title": "Change coroutine"
+        "title": "%cmd.changeCoroutine%"
       },
       {
         "command": "unitySWpack.showEventReferences",
-        "title": "Show Unity Event References"
+        "title": "%cmd.showEventReferences%"
       }
     ],
     "keybindings": [
@@ -166,5 +160,6 @@
   },
   "dependencies": {
     "js-yaml": "^4.1.0"
-  }
+  },
+  "l10n": "./l10n"
 }

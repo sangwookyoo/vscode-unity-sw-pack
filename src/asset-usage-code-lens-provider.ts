@@ -1,14 +1,25 @@
-import { CodeLens, CodeLensProvider, Command, Disposable, Event, EventEmitter, TextDocument, workspace } from "vscode";
-import { parser, language } from "./extension";
+import {
+    CodeLens,
+    CodeLensProvider,
+    Command,
+    Disposable,
+    Event,
+    EventEmitter,
+    TextDocument,
+    l10n,
+    workspace,
+} from "vscode";
+import { parser } from "./extension";
 import { findAssetsRoot } from "./unity-project";
 import { UnityAssetIndex } from "./unity-asset-index";
 import * as path from "path";
 
-function getLocalizedTitle(type: string, count: number): string {
-    if (language === "ko") {
-        return `$(symbol-field) ${type} 참조 ${count}개`;
-    }
-    return `$(symbol-field) ${type} ${count} references`;
+function getLocalizedTitle(type: "scene" | "prefab", count: number): string {
+    // "Used in" rather than "references": the reader wants to know where the
+    // script is attached, not how the index models it.
+    return type === "prefab"
+        ? l10n.t("$(references) Used in {0} prefabs", String(count))
+        : l10n.t("$(references) Used in {0} scenes", String(count));
 }
 
 function formatTooltip(refs: string[], baseDir: string | undefined): string {
@@ -44,22 +55,24 @@ export class UsageScenePrefabProvider implements CodeLensProvider, Disposable {
             return lenses;
         }
 
-        // 상위 디렉터리에 "Assets" 문자열이 포함되어도 안전하도록 실제 Assets 루트를 찾는다
+        // Resolve the real Assets root so a parent folder containing "Assets" is safe.
         const workspaceRoot = workspace.getWorkspaceFolder(doc.uri)?.uri.fsPath;
         const baseDir = findAssetsRoot(doc.uri.fsPath, workspaceRoot);
 
-        [
-            { type: "Scene", refs: this.index.getSceneReferences(guid) },
-            { type: "Prefab", refs: this.index.getPrefabReferences(guid) },
-        ].forEach(({ type, refs }) => {
+        const groups: Array<{ type: "scene" | "prefab"; refs: string[] }> = [
+            { type: "scene", refs: this.index.getSceneReferences(guid) },
+            { type: "prefab", refs: this.index.getPrefabReferences(guid) },
+        ];
+
+        for (const { type, refs } of groups) {
             const cmd: Command = {
-                command: "", // 안내용 CodeLens
+                command: "", // informational lens
                 title: getLocalizedTitle(type, refs.length),
                 tooltip: formatTooltip(refs, baseDir),
             };
 
             lenses.push(new CodeLens(doc.lineAt(classLine).range, cmd));
-        });
+        }
 
         return lenses;
     }

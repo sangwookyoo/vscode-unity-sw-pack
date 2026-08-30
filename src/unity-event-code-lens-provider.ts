@@ -9,18 +9,15 @@ import {
     Selection,
     TextDocument,
     commands,
+    l10n,
     window,
 } from "vscode";
 
-import { language } from "./extension";
 import { UnityAssetIndex } from "./unity-asset-index";
 import { ConnectedMember, UnityEventFinder } from "./unity-event-finder";
 
 function getLocalizedTitle(count: number): string {
-    if (language === "ko") {
-        return `$(symbol-field) Unity 이벤트 참조 ${count}개`;
-    }
-    return `$(symbol-field) Unity Event ${count} references`;
+    return l10n.t("$(link) {0} Unity Event references", String(count));
 }
 
 export default class UnityEventCodeLensProvider implements CodeLensProvider, Disposable {

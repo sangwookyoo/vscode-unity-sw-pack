@@ -1,0 +1,18 @@
+{
+  "ext.displayName": "Unity SW Pack",
+  "ext.description": "在 VS Code 中开发 Unity 6：代码片段、CodeLens、悬停说明、.meta 同步与文档搜索。",
+  "theme.dark": "Unity SW Pack Dark",
+  "cmd.searchDocs": "在 Unity 文档中搜索",
+  "cmd.changeCoroutine": "切换协程",
+  "cmd.showEventReferences": "显示 Unity Event 引用",
+  "config.title": "Unity SW Pack",
+  "config.unityEventMessage": "标记 Awake、Start、Update 等由 Unity 自动调用的方法。",
+  "config.usageScenePrefab": "显示当前脚本被多少个场景和预制件使用。",
+  "config.unityMessageHover": "悬停时说明该 Unity 消息的作用。",
+  "config.typeToggle": "一键在 void 与 IEnumerator 之间切换，把方法变成协程。",
+  "config.metaFileSync": "在编辑器中重命名或删除资源时，同步维护 .meta 文件。",
+  "config.searchInUnityDocs": "添加一个命令，在与项目版本匹配的 Unity 文档中搜索选中的词。",
+  "config.unityEventLens": "显示方法或 UnityEvent 字段在场景和预制件中的连接位置。",
+  "config.onlyScenesInBuildSettings": "仅从 EditorBuildSettings 中列出的场景读取 UnityEvent 连接。引用计数仍覆盖所有场景。",
+  "config.debugLogging": "将索引过程记录到 Unity SW Pack 输出通道。反馈问题时请开启。"
+}

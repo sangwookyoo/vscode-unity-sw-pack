@@ -1,24 +1,30 @@
-import { CodeLensProvider, TextDocument, ProviderResult, CodeLens, Command, window, Position, Range } from "vscode";
-import { parser, language } from "./extension";
+import {
+    CodeLens,
+    CodeLensProvider,
+    Command,
+    Position,
+    ProviderResult,
+    Range,
+    TextDocument,
+    l10n,
+    window,
+} from "vscode";
+import { parser } from "./extension";
 
 const methodRegExp =
     /(?:public|private|protected)?\s+(?:static\s+)?(?<returnType>[^\s]+)\s+(?<methodName>\w+)\s*\((?<parameters>[^)]*)\)/;
 
 function getLocalizedCommandTitle(): string {
-    if (language === "ko") {
-        return "$(symbol-property) 코루틴 변경";
-    }
-    return "$(symbol-property) Change coroutine";
+    return l10n.t("$(symbol-property) Change coroutine");
 }
 
 export class TypeToggleProvider implements CodeLensProvider {
     provideCodeLenses(doc: TextDocument): ProviderResult<CodeLens[]> {
         const lenses: CodeLens[] = [];
-        const lines = doc.getText().split("\n");
         const commandTitle = getLocalizedCommandTitle();
 
-        for (let i = 0; i < lines.length; i++) {
-            const returnType = parser.findReturnType(lines[i]);
+        for (let i = 0; i < doc.lineCount; i++) {
+            const returnType = parser.findReturnType(doc.lineAt(i).text);
             if (!returnType) continue;
 
             const cmd: Command = {

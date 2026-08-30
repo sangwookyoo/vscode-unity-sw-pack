@@ -1,0 +1,18 @@
+{
+  "ext.displayName": "Unity SW Pack",
+  "ext.description": "VS Code で Unity 6 を開発するための機能です。スニペット、CodeLens、ホバー説明、.meta 同期、ドキュメント検索を提供します。",
+  "theme.dark": "Unity SW Pack Dark",
+  "cmd.searchDocs": "Unity ドキュメントで検索",
+  "cmd.changeCoroutine": "コルーチンに変更",
+  "cmd.showEventReferences": "Unity Event の参照を表示",
+  "config.title": "Unity SW Pack",
+  "config.unityEventMessage": "Awake、Start、Update など Unity が自動的に呼び出すメソッドを示します。",
+  "config.usageScenePrefab": "現在のスクリプトを使っているシーンとプレハブの数を表示します。",
+  "config.unityMessageHover": "Unity メッセージにカーソルを合わせると役割を説明します。",
+  "config.typeToggle": "void と IEnumerator をワンクリックで切り替え、メソッドをコルーチンにできます。",
+  "config.metaFileSync": "エディターでアセットの名前変更や削除をしたとき、.meta ファイルを合わせます。",
+  "config.searchInUnityDocs": "選択した語を、プロジェクトのバージョンに合った Unity ドキュメントで検索するコマンドを追加します。",
+  "config.unityEventLens": "メソッドや UnityEvent フィールドがシーンやプレハブのどこに接続されているかを表示します。",
+  "config.onlyScenesInBuildSettings": "EditorBuildSettings に登録されたシーンからのみ UnityEvent の接続を読み取ります。参照数はすべてのシーンを対象にしたままです。",
+  "config.debugLogging": "インデックス処理を Unity SW Pack 出力チャネルに記録します。問題を報告するときに有効にしてください。"
+}

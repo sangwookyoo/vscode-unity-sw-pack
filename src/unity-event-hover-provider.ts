@@ -1,38 +1,21 @@
-import { Hover, HoverProvider, MarkdownString, Position, TextDocument } from "vscode";
+import { Hover, HoverProvider, MarkdownString, Position, TextDocument, l10n } from "vscode";
 
-import { language } from "./extension";
 import { UnityEventConnection } from "./unity-asset-index";
 import { ConnectedMember, ConnectionEnd, UnityEventFinder } from "./unity-event-finder";
 import { toFriendlyName } from "./unity-naming";
 
-function assetLabel(connection: UnityEventConnection): string {
-    return connection.kind === "prefab" ? "Prefab" : "Scene";
-}
-
 function describe(member: ConnectedMember, connection: UnityEventConnection): string {
-    if (language === "ko") {
-        if (member.kind === ConnectionEnd.event) {
-            return "`" + connection.calledClass + "." + connection.calledMethod + "`" + "를 호출합니다.";
-        }
-
-        let markdown = "(" + assetLabel(connection) + ") `" + connection.assetName + "`의 ";
-        if (connection.callingClass) {
-            markdown += "(Class) `" + toFriendlyName(connection.callingClass) + "`의 ";
-        }
-        markdown += "`" + connection.gameObject + "`에서 `" + toFriendlyName(connection.event) + "`으로 호출됩니다.";
-        return markdown;
-    }
-
     if (member.kind === ConnectionEnd.event) {
-        return "Calls `" + connection.calledClass + "." + connection.calledMethod + "`";
+        return l10n.t("Calls {0}.{1}", `\`${connection.calledClass}\``, `\`${connection.calledMethod}\``);
     }
 
-    let markdown = "Called by `" + toFriendlyName(connection.event) + "` from `" + connection.gameObject + "`";
-    if (connection.callingClass) {
-        markdown += "'s `" + toFriendlyName(connection.callingClass) + "` component";
-    }
-    markdown += " in " + assetLabel(connection).toLowerCase() + " `" + connection.assetName + "`";
-    return markdown;
+    const event = `\`${toFriendlyName(connection.event)}\``;
+    const gameObject = `\`${connection.gameObject}\``;
+    const asset = `\`${connection.assetName}\``;
+
+    return connection.kind === "prefab"
+        ? l10n.t("Called by {0} on {1} in prefab {2}", event, gameObject, asset)
+        : l10n.t("Called by {0} on {1} in scene {2}", event, gameObject, asset);
 }
 
 export default class UnityEventHoverProvider implements HoverProvider {

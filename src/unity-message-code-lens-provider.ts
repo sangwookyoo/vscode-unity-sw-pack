@@ -1,39 +1,28 @@
-import { CodeLensProvider, TextDocument, ProviderResult, CodeLens, Command } from "vscode";
-import { parser, language } from "./extension";
+// Marks the methods Unity calls on its own, so they are not mistaken for dead code.
+import { CodeLens, CodeLensProvider, Command, ProviderResult, TextDocument, l10n } from "vscode";
 
-function getLocalizedMessage(): { title: string; tooltip: string } {
-    if (language === "ko") {
-        return {
-            title: "$(symbol-method) Unity 메시지",
-            tooltip: "이 메서드는 Unity 런타임에 의해 호출됩니다.",
-        };
-    }
-    return {
-        title: "$(symbol-method) Unity Message",
-        tooltip: "This method is invoked by Unity runtime",
-    };
-}
+import UnityMessageParser from "./unity-message-parser";
 
-export class UnityEventMessageProvider implements CodeLensProvider {
-    provideCodeLenses(doc: TextDocument): ProviderResult<CodeLens[]> {
+export class UnityMessageCodeLensProvider implements CodeLensProvider {
+    constructor(private readonly parser: UnityMessageParser) {}
+
+    public provideCodeLenses(doc: TextDocument): ProviderResult<CodeLens[]> {
         const lenses: CodeLens[] = [];
-        const lines = doc.getText().split("\n");
-        const localized = getLocalizedMessage();
+        const title = l10n.t("$(symbol-method) Unity Message");
+        const tooltip = l10n.t("Unity calls this method for you. You do not need to call it yourself.");
 
-        for (let i = 0; i < lines.length; i++) {
-            const line = lines[i];
-            if (!parser.hasUnityMessage(line)) continue;
+        for (let i = 0; i < doc.lineCount; i++) {
+            const line = doc.lineAt(i);
+            if (!this.parser.hasUnityMessage(line.text)) {
+                continue;
+            }
+            if (!this.parser.findMethodsName(line.text)) {
+                continue;
+            }
 
-            const methodName = parser.findMethodsName(line);
-            if (!methodName) continue;
-
-            const cmd: Command = {
-                command: "", // 안내용 CodeLens
-                title: localized.title,
-                tooltip: localized.tooltip,
-            };
-
-            lenses.push(new CodeLens(doc.lineAt(i).range, cmd));
+            // No command: this lens is informational.
+            const command: Command = { command: "", title, tooltip };
+            lenses.push(new CodeLens(line.range, command));
         }
 
         return lenses;

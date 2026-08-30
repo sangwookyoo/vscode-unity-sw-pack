@@ -1,0 +1,14 @@
+{
+  "$(symbol-method) Unity Message": "$(symbol-method) Unity メッセージ",
+  "Unity calls this method for you. You do not need to call it yourself.": "Unity が自動的に呼び出すメソッドです。自分で呼ぶ必要はありません。",
+  "$(symbol-property) Change coroutine": "$(symbol-property) コルーチンに変更",
+  "$(references) Used in {0} scenes": "$(references) {0} 個のシーンで使用",
+  "$(references) Used in {0} prefabs": "$(references) {0} 個のプレハブで使用",
+  "$(link) {0} Unity Event references": "$(link) Unity Event の参照 {0} 件",
+  "Calls {0}.{1}": "{0}.{1} を呼び出します",
+  "Called by {0} on {1} in scene {2}": "シーン {2} の {1} から {0} で呼び出されます",
+  "Called by {0} on {1} in prefab {2}": "プレハブ {2} の {1} から {0} で呼び出されます",
+  "Select a word or place the cursor on one to search.": "検索する語を選択するか、語の上にカーソルを置いてください。",
+  "Could not open the browser. Check your default browser setting.": "ブラウザーを開けませんでした。既定のブラウザー設定を確認してください。",
+  "Show Unity Event References": "Unity Event の参照を表示"
+}

@@ -1,45 +1,40 @@
-import { env } from "vscode";
-import * as snippetEn from "./snippets/en.json";
-import * as snippetKo from "./snippets/ko.json";
+// Line-level recognition of Unity message declarations.
+//
+// The prefixes come from the snippet catalog, which is language independent —
+// they are C# method names. The parser used to build this regex from whichever
+// localized snippet file matched the display language, which tied message
+// detection to the UI language for no reason.
 import { findClassLine } from "./csharp-syntax";
+import { SNIPPET_PREFIXES } from "./snippet-catalog";
 
-export default class Parser {
-    private readonly methodNameRegex: RegExp;
-    private readonly returnTypeRegex: RegExp;
+function escapeRegExp(value: string): string {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+export default class UnityMessageParser {
+    private readonly methodNameRegex = /(?:void|IEnumerator)\s+(\w+)\s*\(.*\)/;
+    private readonly returnTypeRegex = /(?:public|private|protected)?\s+(?:static\s+)?(void|IEnumerator)\s+(\w+)\s*\(/;
+    private readonly unityMessageIEnumeratorRegex = /^\s*IEnumerator\s+Start\s*\(\s*\)/;
     private readonly unityMessageRegex: RegExp;
-    private readonly unityMessageIEnumeratorRegex = /^IEnumerator\s+Start\s*\(\s*\)/;
 
     constructor() {
-        this.methodNameRegex = /(?:void|IEnumerator)\s+(\w+)\s*\(.*\)/;
-        this.returnTypeRegex = /(?:public|private|protected)?\s+(?:static\s+)?(void|IEnumerator)\s+(\w+)\s*\(/;
-
-        // 언어에 따른 메시지 prefix 배열 생성
-        const language = env.language;
-        const snippetSource = language === "ko" ? Object.values(snippetKo) : Object.values(snippetEn);
-
-        const prefixes = snippetSource.map((msg: any) => this.escapeRegExp(msg.prefix));
-        this.unityMessageRegex = new RegExp(`\\bvoid\\s+(${prefixes.join("|")})\\s*\\(.*\\)`);
+        const prefixes = SNIPPET_PREFIXES.map(escapeRegExp).join("|");
+        this.unityMessageRegex = new RegExp(`\\bvoid\\s+(${prefixes})\\s*\\(.*\\)`);
     }
 
-    hasUnityMessage(line: string): boolean {
+    public hasUnityMessage(line: string): boolean {
         return this.unityMessageRegex.test(line) || this.unityMessageIEnumeratorRegex.test(line);
     }
 
-    findReturnType(line: string): string | undefined {
-        const match = this.returnTypeRegex.exec(line);
-        return match ? match[1] : undefined;
+    public findReturnType(line: string): string | undefined {
+        return this.returnTypeRegex.exec(line)?.[1];
     }
 
-    findMethodsName(line: string): string | undefined {
-        const match = this.methodNameRegex.exec(line);
-        return match ? match[1] : undefined;
+    public findMethodsName(line: string): string | undefined {
+        return this.methodNameRegex.exec(line)?.[1];
     }
 
-    findClassName(lines: string[]): number | undefined {
+    public findClassName(lines: string[]): number | undefined {
         return findClassLine(lines);
-    }
-
-    private escapeRegExp(str: string): string {
-        return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     }
 }
