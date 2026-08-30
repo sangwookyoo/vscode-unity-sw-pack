@@ -8,7 +8,6 @@ import {
 import * as fs from "fs";
 import * as path from "path";
 
-import AssetParser from "./AssetParser";
 import Parser from "./Parser";
 import { UnityEventMessageProvider } from "./UnityEventMessage";
 import { UsageScenePrefabProvider } from "./UsageScenePrefab";
@@ -16,10 +15,11 @@ import UnityMessageHoverProvider from "./Hover";
 import { TypeToggleProvider, returnMethodType } from "./TypeToggle";
 import { searchUnityDocs } from "./SearchUnityDocs";
 import * as metaFileSync from "./MetaFileSync";
-import * as unityLens from "./event-lens/unity-lens";
+import * as unityEventLens from "./unity-event-lens";
+import { initializeLogger } from "./logger";
+import { UnityAssetIndex } from "./unity-asset-index";
 
 export const parser = new Parser();
-export const assetParser = new AssetParser();
 export const language = env.language;
 
 function shouldEnableMetaFileSync(): boolean {
@@ -33,6 +33,17 @@ function shouldEnableMetaFileSync(): boolean {
 export function activate(context: ExtensionContext) {
     const unitySWpack = workspace.getConfiguration("unitySWpack");
 
+    // Assets 인덱스는 실제로 필요한 기능이 켜져 있을 때만 생성한다
+    let assetIndex: UnityAssetIndex | undefined;
+    const getAssetIndex = (): UnityAssetIndex => {
+        if (!assetIndex) {
+            context.subscriptions.push(initializeLogger());
+            assetIndex = new UnityAssetIndex();
+            context.subscriptions.push(assetIndex);
+        }
+        return assetIndex;
+    };
+
     const features = [
         {
             enabled: unitySWpack.get("unityEventMessage"),
@@ -43,10 +54,13 @@ export function activate(context: ExtensionContext) {
         },
         {
             enabled: unitySWpack.get("usageScenePrefab"),
-            register: () =>
+            register: () => {
+                const provider = new UsageScenePrefabProvider(getAssetIndex());
                 context.subscriptions.push(
-                    languages.registerCodeLensProvider({ language: "csharp" }, new UsageScenePrefabProvider())
-                ),
+                    provider,
+                    languages.registerCodeLensProvider({ language: "csharp" }, provider)
+                );
+            },
         },
         {
             enabled: unitySWpack.get("unityMessageHover"),
@@ -79,7 +93,7 @@ export function activate(context: ExtensionContext) {
         },
         {
             enabled: unitySWpack.get("unityEventLens"),
-            register: () => unityLens.activate(context),
+            register: () => unityEventLens.activate(context, getAssetIndex()),
         },
     ];
 
@@ -91,9 +105,6 @@ export function activate(context: ExtensionContext) {
 }
 
 export function deactivate() {
-    try {
-        assetParser.dispose();
-    } catch {}
     try {
         metaFileSync.deactivate();
     } catch {}

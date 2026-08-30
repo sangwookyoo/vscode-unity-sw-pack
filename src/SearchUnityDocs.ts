@@ -6,15 +6,24 @@ function buildSearchUrl(docsVersion: string, query: string): string {
     return `https://docs.unity3d.com/${docsVersion}/Documentation/ScriptReference/30_search.html?q=${encodeURIComponent(query)}`;
 }
 
-// ProjectVersion.txt는 활성화 이후 한 번만 읽고 결과를 캐시한다
-let docsVersionPromise: Promise<string> | undefined;
+// ProjectVersion.txt는 워크스페이스 폴더(루트)별로 한 번만 읽고 결과를 캐시한다
+const docsVersionByRoot = new Map<string, Promise<string>>();
 
-function getDocsVersion(): Promise<string> {
-    if (!docsVersionPromise) {
-        const workspaceRoot = workspace.workspaceFolders?.[0]?.uri.fsPath;
-        docsVersionPromise = readDocsVersion(workspaceRoot);
+function resolveWorkspaceRoot(documentUri: Uri): string | undefined {
+    // 여러 폴더가 열려 있을 수 있으므로 활성 문서가 속한 폴더를 우선한다
+    return workspace.getWorkspaceFolder(documentUri)?.uri.fsPath ?? workspace.workspaceFolders?.[0]?.uri.fsPath;
+}
+
+function getDocsVersion(documentUri: Uri): Promise<string> {
+    const workspaceRoot = resolveWorkspaceRoot(documentUri);
+    const key = workspaceRoot ?? "";
+
+    let cached = docsVersionByRoot.get(key);
+    if (!cached) {
+        cached = readDocsVersion(workspaceRoot);
+        docsVersionByRoot.set(key, cached);
     }
-    return docsVersionPromise;
+    return cached;
 }
 
 export async function searchUnityDocs() {
@@ -38,7 +47,7 @@ export async function searchUnityDocs() {
     }
 
     try {
-        const docsVersion = await getDocsVersion();
+        const docsVersion = await getDocsVersion(editor.document.uri);
         await commands.executeCommand("vscode.open", Uri.parse(buildSearchUrl(docsVersion, query)));
     } catch (err) {
         window.showErrorMessage("Unity 문서 검색을 실행할 수 없습니다.");
