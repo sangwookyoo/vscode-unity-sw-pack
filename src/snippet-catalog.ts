@@ -18,11 +18,16 @@ export interface SnippetBody {
     name: string;
     /** Completion trigger, which for Unity messages is the method name. */
     prefix: string;
-    /** Snippet body lines, in VS Code snippet syntax. */
-    body: string[];
+    /**
+     * Snippet body in VS Code snippet syntax. The format allows either a single
+     * string or one entry per line, and both appear in bodies.json.
+     */
+    body: string | string[];
 }
 
-export interface Snippet extends SnippetBody {
+export interface Snippet extends Omit<SnippetBody, "body"> {
+    /** Always normalized to lines, so callers never branch on the format. */
+    body: string[];
     description: string;
 }
 
@@ -54,6 +59,7 @@ export function getSnippets(locale: SupportedLocale): Snippet[] {
 
     const snippets = BODIES.map((entry) => ({
         ...entry,
+        body: Array.isArray(entry.body) ? entry.body : [entry.body],
         description: translated[entry.prefix] ?? fallback[entry.prefix] ?? "",
     }));
 
