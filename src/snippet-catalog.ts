@@ -6,11 +6,11 @@
 // manifest was rewritten at runtime to point at the right file.
 //
 // Free of "vscode" imports so the merge rules stay unit testable.
-import * as bodies from "./snippets/bodies.json";
-import * as descriptionsEn from "./i18n/descriptions.en.json";
-import * as descriptionsJa from "./i18n/descriptions.ja.json";
-import * as descriptionsKo from "./i18n/descriptions.ko.json";
-import * as descriptionsZhCn from "./i18n/descriptions.zh-cn.json";
+import bodies from "./snippets/bodies.json";
+import descriptionsEn from "./i18n/descriptions.en.json";
+import descriptionsJa from "./i18n/descriptions.ja.json";
+import descriptionsKo from "./i18n/descriptions.ko.json";
+import descriptionsZhCn from "./i18n/descriptions.zh-cn.json";
 import { DEFAULT_LOCALE, SupportedLocale } from "./i18n/locale";
 
 export interface SnippetBody {

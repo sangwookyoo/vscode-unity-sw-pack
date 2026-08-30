@@ -1,6 +1,8 @@
 out
 dist
 node_modules
+.vscode-test
 package-lock.json
 src/test/fixtures
+test-fixtures
 theme

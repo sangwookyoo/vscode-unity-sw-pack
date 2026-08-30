@@ -6,7 +6,15 @@ import prettier from "eslint-config-prettier";
 
 export default tseslint.config(
     {
-        ignores: ["out/**", "dist/**", "**/*.d.ts", "node_modules/**"],
+        ignores: [
+            "out/**",
+            "dist/**",
+            "node_modules/**",
+            // A full VS Code build lives here once the tests have run once.
+            ".vscode-test/**",
+            "test-fixtures/**",
+            "**/*.d.ts",
+        ],
     },
     js.configs.recommended,
     ...tseslint.configs.recommendedTypeChecked,
@@ -39,9 +47,15 @@ export default tseslint.config(
         },
     },
     {
-        // The config file itself is not part of the TypeScript program.
+        // Build scripts and the config files are Node modules outside the
+        // TypeScript program.
         files: ["*.mjs", "*.js"],
         ...tseslint.configs.disableTypeChecked,
+        languageOptions: {
+            ...tseslint.configs.disableTypeChecked.languageOptions,
+            parserOptions: { projectService: false, project: false },
+            globals: { process: "readonly", console: "readonly", __dirname: "readonly" },
+        },
     },
     {
         // Tests assert on fixtures and may leave promises to the runner.

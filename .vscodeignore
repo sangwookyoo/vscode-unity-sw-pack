@@ -1,10 +1,27 @@
+# Source and build inputs — the VSIX ships the bundle in dist/ only.
+src/**
+out/**
+esbuild.mjs
+eslint.config.mjs
+.vscode-test.mjs
+tsconfig.json
+**/*.ts
+**/*.map
+
+# Development tooling and fixtures
 .vscode/**
 .vscode-test/**
-src/**
+test-fixtures/**
+.editorconfig
+.prettierrc.json
+.prettierignore
+.gitattributes
 .gitignore
-.yarnrc
-vsc-extension-quickstart.md
-**/tsconfig.json
-**/.eslintrc.json
-**/*.map
-**/*.ts
+.claude/**
+CLAUDE.md
+
+# Keep: package.nls*.json, l10n/**, dist/**, theme/**, images/**, gifs/**,
+# README*.md, CHANGELOG.md, LICENSE
+
+# Images are served from GitHub, so they do not need to ship in the VSIX.
+gifs/**

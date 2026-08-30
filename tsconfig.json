@@ -7,6 +7,9 @@
     "sourceMap": true,
     "rootDir": "src",
     "strict": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true
   }
 }
