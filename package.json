@@ -20,7 +20,7 @@
     "Snippets",
     "Programming Languages",
     "Themes",
-    "Linters"
+    "Other"
   ],
   "keywords": [
     "unity",
@@ -171,5 +171,7 @@
   "dependencies": {
     "js-yaml": "^4.1.0"
   },
-  "l10n": "./l10n"
+  "l10n": "./l10n",
+  "homepage": "https://github.com/sangwookyoo/vscode-unity-sw-pack#readme",
+  "qna": "marketplace"
 }
