@@ -79,7 +79,7 @@
         ],
         "themes": [
             {
-                "label": "Unity SW Theme",
+                "label": "Unity SW Pack Dark",
                 "uiTheme": "vs-dark",
                 "path": "./theme/unity-sw-theme.json"
             }
@@ -91,12 +91,6 @@
                     "when": "editorHasSelection == true",
                     "group": "Unity SW Pack"
                 }
-            ],
-            "commandPalette": [
-                {
-                    "command": "unitySWpack.searchInUnityDocumentation",
-                    "when": "false"
-                }
             ]
         },
         "commands": [
@@ -106,13 +100,14 @@
             },
             {
                 "command": "unitySWpack.changeReturnType",
-                "title": "Type toggle"
+                "title": "Change coroutine"
             }
         ],
         "keybindings": [
             {
                 "command": "unitySWpack.searchInUnityDocumentation",
-                "key": "shift+1",
+                "key": "ctrl+alt+u",
+                "mac": "cmd+alt+u",
                 "when": "editorHasSelection == true"
             }
         ]

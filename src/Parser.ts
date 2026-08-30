@@ -1,13 +1,13 @@
 import { env } from "vscode";
 import * as snippetEn from "./snippets/en.json";
 import * as snippetKo from "./snippets/ko.json";
+import { findClassLine } from "./CSharpSyntax";
 
 export default class Parser {
     private readonly methodNameRegex: RegExp;
     private readonly returnTypeRegex: RegExp;
     private readonly unityMessageRegex: RegExp;
     private readonly unityMessageIEnumeratorRegex = /^IEnumerator\s+Start\s*\(\s*\)/;
-    private readonly classRegex = /\bclass\s+\w+/;
 
     constructor() {
         this.methodNameRegex = /(?:void|IEnumerator)\s+(\w+)\s*\(.*\)/;
@@ -36,7 +36,7 @@ export default class Parser {
     }
 
     findClassName(lines: string[]): number | undefined {
-        return lines.findIndex(line => this.classRegex.test(line));
+        return findClassLine(lines);
     }
 
     private escapeRegExp(str: string): string {

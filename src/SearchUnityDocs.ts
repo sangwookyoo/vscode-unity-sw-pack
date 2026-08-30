@@ -1,8 +1,23 @@
-import { window, commands, Uri, Position, Selection } from "vscode";
+import { window, commands, Uri, Position, workspace } from "vscode";
+import { readDocsVersion } from "./UnityProject";
 
-const UNITY_DOCS_SEARCH_URL = "https://docs.unity3d.com/ScriptReference/30_search.html?q=";
+// 프로젝트의 Unity 버전에 맞춘 문서 검색 URL (예: https://docs.unity3d.com/6000.0/Documentation/ScriptReference/30_search.html?q=)
+function buildSearchUrl(docsVersion: string, query: string): string {
+    return `https://docs.unity3d.com/${docsVersion}/Documentation/ScriptReference/30_search.html?q=${encodeURIComponent(query)}`;
+}
 
-export function searchUnityDocs() {
+// ProjectVersion.txt는 활성화 이후 한 번만 읽고 결과를 캐시한다
+let docsVersionPromise: Promise<string> | undefined;
+
+function getDocsVersion(): Promise<string> {
+    if (!docsVersionPromise) {
+        const workspaceRoot = workspace.workspaceFolders?.[0]?.uri.fsPath;
+        docsVersionPromise = readDocsVersion(workspaceRoot);
+    }
+    return docsVersionPromise;
+}
+
+export async function searchUnityDocs() {
     const editor = window.activeTextEditor;
     if (!editor) return;
 
@@ -23,8 +38,8 @@ export function searchUnityDocs() {
     }
 
     try {
-        const encoded = encodeURIComponent(query);
-        commands.executeCommand("vscode.open", Uri.parse(`${UNITY_DOCS_SEARCH_URL}${encoded}`));
+        const docsVersion = await getDocsVersion();
+        await commands.executeCommand("vscode.open", Uri.parse(buildSearchUrl(docsVersion, query)));
     } catch (err) {
         window.showErrorMessage("Unity 문서 검색을 실행할 수 없습니다.");
         console.error("searchUnityDocs error:", err);

@@ -1,5 +1,6 @@
-import { CodeLens, CodeLensProvider, Command, ProviderResult, TextDocument } from "vscode";
+import { CodeLens, CodeLensProvider, Command, ProviderResult, TextDocument, workspace } from "vscode";
 import { assetParser, parser, language } from "./extension";
+import { findAssetsRoot } from "./UnityProject";
 import * as path from "path";
 
 function getLocalizedTitle(type: string, count: number): string {
@@ -9,10 +10,10 @@ function getLocalizedTitle(type: string, count: number): string {
     return `$(symbol-field) ${type} ${count} references`;
 }
 
-function formatTooltip(refs: string[], baseDir: string): string {
+function formatTooltip(refs: string[], baseDir: string | undefined): string {
     return refs
         .map((filePath) => {
-            const relative = path.relative(baseDir, filePath);
+            const relative = baseDir ? path.relative(baseDir, filePath) : filePath;
             return relative.replace(/\\/g, "/"); // 경로 구분자 통일
         })
         .join("\n");
@@ -28,7 +29,9 @@ export class UsageScenePrefabProvider implements CodeLensProvider {
         const classLine = parser.findClassName(lines);
         if (classLine === undefined) return;
 
-        const baseDir = path.join(doc.uri.fsPath.split("Assets")[0], "Assets");
+        // 상위 디렉터리에 "Assets" 문자열이 포함되어도 안전하도록 실제 Assets 루트를 찾는다
+        const workspaceRoot = workspace.getWorkspaceFolder(doc.uri)?.uri.fsPath;
+        const baseDir = findAssetsRoot(doc.uri.fsPath, workspaceRoot);
 
         [
             { type: "Scene", set: assetParser.scenes, ext: ".unity" },

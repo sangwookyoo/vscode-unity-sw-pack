@@ -11,19 +11,6 @@
 			"}"
 		]
 	},
-	"Unity NetworkBehaviour": {
-		"prefix": "NetworkBehaviour",
-		"description": "Unity NetworkBehaviour class template.",
-		"body": [
-			"using UnityEngine;",
-			"using UnityEngine.Networking;",
-			"",
-			"public class ${TM_FILENAME_BASE} : NetworkBehaviour",
-			"{",
-			"\t$0",
-			"}"
-		]
-	},
 	"Unity ScriptableObject": {
 		"prefix": "ScriptableObject",
 		"description": "Unity ScriptableObject class template.",
@@ -245,16 +232,6 @@
 			"}"
 		]
 	},
-	"MonoBehaviour OnConnectedToServer": {
-		"prefix": "OnConnectedToServer",
-		"description": "Called on the client when you have successfully connected to a server.",
-		"body": [
-			"private void OnConnectedToServer()",
-			"{",
-			"\t$0",
-			"}"
-		]
-	},
 	"MonoBehaviour OnControllerColliderHit": {
 		"prefix": "OnControllerColliderHit",
 		"description": "OnControllerColliderHit is called when the controller hits a collider while performing a Move.",
@@ -280,26 +257,6 @@
 		"description": "This function is called when the MonoBehaviour becomes disabled or inactive.",
 		"body": [
 			"private void OnDisable()",
-			"{",
-			"\t$0",
-			"}"
-		]
-	},
-	"MonoBehaviour OnDisconnectedFromMasterServer": {
-		"prefix": "OnDisconnectedFromMasterServer",
-		"description": "Called on the client when the connection was lost or you disconnected from the master server.",
-		"body": [
-			"private void OnDisconnectedFromMasterServer(NetworkDisconnection info)",
-			"{",
-			"\t$0",
-			"}"
-		]
-	},
-	"MonoBehaviour OnDisconnectedFromServer": {
-		"prefix": "OnDisconnectedFromServer",
-		"description": "Called on the client when the connection was lost or you disconnected from the server.",
-		"body": [
-			"private void OnDisconnectedFromServer(NetworkDisconnection info)",
 			"{",
 			"\t$0",
 			"}"
@@ -335,26 +292,6 @@
 			"}"
 		]
 	},
-	"MonoBehaviour OnFailedToConnect": {
-		"prefix": "OnFailedToConnect",
-		"description": "Called on the client when a connection attempt fails for some reason.",
-		"body": [
-			"private void OnFailedToConnect(NetworkConnectionError error)",
-			"{",
-			"\t$0",
-			"}"
-		]
-	},
-	"MonoBehaviour OnFailedToConnectToMasterServer": {
-		"prefix": "OnFailedToConnectToMasterServer",
-		"description": "Called on clients or servers when there is a problem connecting to the MasterServer.",
-		"body": [
-			"private void OnFailedToConnectToMasterServer(NetworkConnectionError error)",
-			"{",
-			"\t$0",
-			"}"
-		]
-	},
 	"MonoBehaviour OnGUI": {
 		"prefix": "OnGUI",
 		"description": "OnGUI is called for rendering and handling GUI events.",
@@ -380,26 +317,6 @@
 		"description": "Called when a Joint2D attached to the same game object breaks.",
 		"body": [
 			"private void OnJointBreak2D(Joint2D brokenJoint)",
-			"{",
-			"\t$0",
-			"}"
-		]
-	},
-	"MonoBehaviour OnLevelWasLoaded": {
-		"prefix": "OnLevelWasLoaded",
-		"description": "This function is called after a new level was loaded.",
-		"body": [
-			"private void OnLevelWasLoaded(int level)",
-			"{",
-			"\t$0",
-			"}"
-		]
-	},
-	"MonoBehaviour OnMasterServerEvent": {
-		"prefix": "OnMasterServerEvent",
-		"description": "Called on clients or servers when reporting events from the MasterServer.",
-		"body": [
-			"private void OnMasterServerEvent(MasterServerEvent msEvent)",
 			"{",
 			"\t$0",
 			"}"
@@ -475,16 +392,6 @@
 			"}"
 		]
 	},
-	"MonoBehaviour OnNetworkInstantiate": {
-		"prefix": "OnNetworkInstantiate",
-		"description": "Called on objects which have been network instantiated with Network.Instantiate.",
-		"body": [
-			"private void OnNetworkInstantiate(NetworkMessageInfo info)",
-			"{",
-			"\t$0",
-			"}"
-		]
-	},
 	"MonoBehaviour OnParticleCollision": {
 		"prefix": "OnParticleCollision",
 		"description": "OnParticleCollision is called when a particle hits a collider.",
@@ -520,26 +427,6 @@
 		"description": "Called when a Particle System's built-in update job has been scheduled.",
 		"body": [
 			"private void OnParticleUpdateJobScheduled()",
-			"{",
-			"\t$0",
-			"}"
-		]
-	},
-	"MonoBehaviour OnPlayerConnected": {
-		"prefix": "OnPlayerConnected",
-		"description": "Called on the server whenever a new player has successfully connected.",
-		"body": [
-			"private void OnPlayerConnected(NetworkPlayer player)",
-			"{",
-			"\t$0",
-			"}"
-		]
-	},
-	"MonoBehaviour OnPlayerDisconnected": {
-		"prefix": "OnPlayerDisconnected",
-		"description": "Called on the server whenever a player disconnected from the server.",
-		"body": [
-			"private void OnPlayerDisconnected(NetworkPlayer player)",
 			"{",
 			"\t$0",
 			"}"
@@ -610,26 +497,6 @@
 		"description": "OnRenderObject is called after camera has rendered the scene.",
 		"body": [
 			"private void OnRenderObject()",
-			"{",
-			"\t$0",
-			"}"
-		]
-	},
-	"MonoBehaviour OnSerializeNetworkView": {
-		"prefix": "OnSerializeNetworkView",
-		"description": "Used to customize synchronization of variables in a script watched by a network view.",
-		"body": [
-			"private void OnSerializeNetworkView(BitStream stream, NetworkMessageInfo info)",
-			"{",
-			"\t$0",
-			"}"
-		]
-	},
-	"MonoBehaviour OnServerInitialized": {
-		"prefix": "OnServerInitialized",
-		"description": "Called on the server whenever a Network.InitializeServer was invoked and has completed.",
-		"body": [
-			"private void OnServerInitialized()",
 			"{",
 			"\t$0",
 			"}"

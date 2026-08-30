@@ -1,7 +1,7 @@
 import { commands, ExtensionContext, languages, window, workspace } from "vscode";
 import UnityEventReferencesCodeLensProvider, { showEventReferences } from './code-lens-provider';
 import UnityEventReferencesHoverProvider from "./hover-provider";
-import { readUnityMetaFiles, readUnitySceneFiles } from "./unity-scene-reader";
+import { disposeSceneReader, readUnityMetaFiles, readUnitySceneFiles } from "./unity-scene-reader";
 import { getExtensionLogger, IVSCodeExtLogger } from "@vscode-logging/logger";
 
 export let logger: IVSCodeExtLogger;
@@ -50,6 +50,7 @@ export function activate(context: ExtensionContext) {
 	context.subscriptions.push(commandDisposable);
 	context.subscriptions.push(codeLensProviderDisposable);
 	context.subscriptions.push(hoverProviderDisposable);
+	context.subscriptions.push({ dispose: disposeSceneReader });
 }
 
 function getLogLevel() {

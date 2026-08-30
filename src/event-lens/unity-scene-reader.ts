@@ -1,4 +1,4 @@
-import { Uri, workspace } from 'vscode';
+import { FileSystemWatcher, Uri, workspace } from 'vscode';
 import * as yaml from 'js-yaml';
 import { logger } from './unity-lens';
 import { TextDecoder } from 'util';
@@ -22,7 +22,7 @@ export class SceneEventConnection {
         return guidsToClassNames.get(this.callingClassGuid) || '';
     }
     public get gameObject(): string {
-        return urisToGameObjectIds.get(this.sceneUri)?.get(String(this.gameObjectId)) || 'Unknown Game Object';
+        return urisToGameObjectIds.get(this.sceneUri.toString())?.get(String(this.gameObjectId)) || 'Unknown Game Object';
     }
 
     constructor(sceneUri: Uri,
@@ -60,13 +60,14 @@ export let unityMetadataVersion = 0;
 
 let metasRead = false;
 let scenesRead = false;
-let metaFilesPromise: Promise<void>;
-let sceneFilesPromise: Promise<void>;
+let metaFilesPromise: Promise<void> | undefined;
+let sceneFilesPromise: Promise<void> | undefined;
 let sceneEventConnections: SceneEventConnection[] = [];
 let scenePaths: string[] = [];
 let guidsToClassNames = new Map<string, string>();
-let urisToGuids = new Map<Uri, string>();
-let urisToGameObjectIds = new Map<Uri, Map<string, string>>();
+let watchers: FileSystemWatcher[] = [];
+let urisToGuids = new Map<string, string>();
+let urisToGameObjectIds = new Map<string, Map<string, string>>();
 
 const buildSettingsGlob = '**/ProjectSettings/EditorBuildSettings.asset';
 const unitySceneGlob = '**/Assets/**/*.unity';
@@ -94,6 +95,27 @@ export async function readUnitySceneFiles(force = false): Promise<void> {
     scenesRead = true;
 }
 
+/**
+ * Disposes the file system watchers and clears cached metadata.
+ * Called when the extension is deactivated.
+ */
+export function disposeSceneReader(): void {
+    for (const watcher of watchers) {
+        watcher.dispose();
+    }
+    watchers = [];
+
+    sceneEventConnections = [];
+    scenePaths = [];
+    guidsToClassNames.clear();
+    urisToGuids.clear();
+    urisToGameObjectIds.clear();
+    metasRead = false;
+    scenesRead = false;
+    metaFilesPromise = undefined;
+    sceneFilesPromise = undefined;
+}
+
 async function doReadUnityMetaFiles(): Promise<void> {
     const metaUris = await workspace.findFiles(cSharpMetaGlob, null);
     for (const uri of metaUris) {
@@ -101,12 +123,14 @@ async function doReadUnityMetaFiles(): Promise<void> {
     }
 
     const metaWatcher = workspace.createFileSystemWatcher(cSharpMetaGlob, false, true);
+    watchers.push(metaWatcher);
     metaWatcher.onDidCreate(findGuid);
     metaWatcher.onDidDelete(uri => {
-        const guid = urisToGuids.get(uri);
+        const key = uri.toString();
+        const guid = urisToGuids.get(key);
         if (guid) {
             guidsToClassNames.delete(guid);
-            urisToGuids.delete(uri);
+            urisToGuids.delete(key);
         }
     });
 }
@@ -121,7 +145,7 @@ async function findGuid(uri: Uri) {
         const tree = yaml.load(yamlText) as any;
         if (tree && tree.guid) {
             guid = tree.guid;
-            urisToGuids.set(uri, guid);
+            urisToGuids.set(uri.toString(), guid);
             const className = nameWithoutExtension(uri);
             if (className) {
                 guidsToClassNames.set(guid, className);
@@ -139,6 +163,7 @@ async function doReadUnitySceneFiles(): Promise<void> {
         await readProjectScenePaths();
 
         const buildSettingsWatcher = workspace.createFileSystemWatcher(buildSettingsGlob, true, false, true);
+        watchers.push(buildSettingsWatcher);
         buildSettingsWatcher.onDidChange(readProjectScenePaths);
     }
 
@@ -148,12 +173,16 @@ async function doReadUnitySceneFiles(): Promise<void> {
     }
 
     const sceneWatcher = workspace.createFileSystemWatcher(unitySceneGlob);
+    watchers.push(sceneWatcher);
     sceneWatcher.onDidChange(parseScene);
     sceneWatcher.onDidCreate(parseScene);
     sceneWatcher.onDidDelete(uri => sceneEventConnections = sceneEventConnections.filter(connection => connection.sceneUri.path !== uri.path));
 }
 
 async function readProjectScenePaths() {
+    // this runs again whenever EditorBuildSettings.asset changes, so start from scratch
+    scenePaths = [];
+
     let settingsUris = await workspace.findFiles(buildSettingsGlob, null);
     settingsUris = settingsUris.filter(uri => uri.path.indexOf('/Assets/') === -1);
     try {
@@ -186,8 +215,8 @@ async function parseScene(uri: Uri) {
     const startTime = performance.now();
 
     ++unityMetadataVersion;
-    if (!urisToGameObjectIds.has(uri)) {
-        urisToGameObjectIds.set(uri, new Map());
+    if (!urisToGameObjectIds.has(uri.toString())) {
+        urisToGameObjectIds.set(uri.toString(), new Map());
     }
 
     sceneEventConnections = sceneEventConnections.filter(connection => connection.sceneUri.path !== uri.path);
@@ -230,7 +259,7 @@ function parseDoc(itemYaml: string, fileId: string, uri: Uri, fileIdsToGuids: Ma
     try {
         const tree = yaml.load(itemYaml) as any;
         if (tree.GameObject) {
-            urisToGameObjectIds.get(uri)?.set(fileId, tree.GameObject.m_Name);
+            urisToGameObjectIds.get(uri.toString())?.set(fileId, tree.GameObject.m_Name);
         } else if (tree.MonoBehaviour) {
             const behavior = tree.MonoBehaviour;
             const guid = behavior.m_Script?.guid;

@@ -1,9 +1,7 @@
-import { ExtensionContext, FileSystemWatcher, Uri, window, workspace } from "vscode";
+import { Disposable, ExtensionContext, workspace } from "vscode";
 import * as fs from "fs/promises";
-import * as path from "path";
 
-let watcher: FileSystemWatcher | undefined;
-let justCreated: Uri | undefined;
+let disposables: Disposable[] = [];
 
 async function fileExists(filePath: string): Promise<boolean> {
     try {
@@ -30,48 +28,46 @@ async function deleteMetaFile(filePath: string): Promise<void> {
 }
 
 export async function activate(context: ExtensionContext) {
-    // 기존 watcher가 있다면 정리
-    if (watcher) {
-        watcher.dispose();
-    }
+    // 기존 리스너가 있다면 정리
+    await deactivate();
 
-    watcher = workspace.createFileSystemWatcher("**/*");
+    // 에디터에서 발생한 이름 변경/삭제 이벤트는 정확한 경로 쌍을 제공하므로 추측이 필요 없다.
+    // 파일과 디렉터리 모두 <경로>.meta 규칙을 그대로 따른다.
+    const renameDisposable = workspace.onDidRenameFiles(async (event) => {
+        for (const { oldUri, newUri } of event.files) {
+            if (oldUri.fsPath.endsWith(".meta")) {
+                continue;
+            }
 
-    watcher.onDidCreate((uri) => {
-        if (uri.fsPath.endsWith(".meta")) return;
-        if (!window.state.focused) return;
-
-        // 같은 파일 이벤트 중복 방지
-        if (justCreated && uri.fsPath.includes(justCreated.fsPath)) return;
-
-        justCreated = uri;
-        setTimeout(() => {
-            justCreated = undefined;
-        }, 200);
-    });
-
-    watcher.onDidDelete(async (uri) => {
-        if (uri.fsPath.endsWith(".meta")) return;
-        if (!window.state.focused) return;
-
-        if (justCreated) {
-            const created = path.parse(justCreated.fsPath);
-            const deleted = path.parse(uri.fsPath);
-
-            if (created.dir === deleted.dir || created.base === deleted.base) {
-                await renameMetaFile(uri.fsPath, justCreated.fsPath);
-                return;
+            try {
+                await renameMetaFile(oldUri.fsPath, newUri.fsPath);
+            } catch (err) {
+                console.error("Failed to rename meta file:", err);
             }
         }
-
-        // justCreated가 없거나 조건 불충족 시 meta 삭제
-        await deleteMetaFile(uri.fsPath);
     });
+
+    const deleteDisposable = workspace.onDidDeleteFiles(async (event) => {
+        for (const uri of event.files) {
+            if (uri.fsPath.endsWith(".meta")) {
+                continue;
+            }
+
+            try {
+                await deleteMetaFile(uri.fsPath);
+            } catch (err) {
+                console.error("Failed to delete meta file:", err);
+            }
+        }
+    });
+
+    disposables = [renameDisposable, deleteDisposable];
+    context.subscriptions.push(renameDisposable, deleteDisposable);
 }
 
 export async function deactivate() {
-    if (watcher) {
-        watcher.dispose();
-        watcher = undefined;
+    for (const disposable of disposables) {
+        disposable.dispose();
     }
+    disposables = [];
 }

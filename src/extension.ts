@@ -1,7 +1,6 @@
 import {
     workspace,
     ExtensionContext,
-    ConfigurationTarget,
     languages,
     commands,
     env,
@@ -23,29 +22,6 @@ export const parser = new Parser();
 export const assetParser = new AssetParser();
 export const language = env.language;
 
-function configureSnippets(context: ExtensionContext) {
-    const snippetsConfig = {
-        language: "csharp",
-        path: language === "ko" ? "./out/snippets/ko.json" : "./out/snippets/en.json",
-    };
-
-    const packageJSONPath = path.join(context.extensionPath, "package.json");
-    try {
-        const packageJSON = JSON.parse(fs.readFileSync(packageJSONPath, "utf-8"));
-        packageJSON.contributes.snippets = [snippetsConfig];
-        fs.writeFileSync(packageJSONPath, JSON.stringify(packageJSON, null, 4));
-    } catch (err) {
-        console.error("Failed to configure snippets:", err);
-    }
-}
-
-function configureOmnisharp() {
-    const omnisharp = workspace.getConfiguration("omnisharp");
-    if (omnisharp) {
-        omnisharp.update("useModernNet", false, ConfigurationTarget.Global);
-    }
-}
-
 function shouldEnableMetaFileSync(): boolean {
     const root = workspace.rootPath;
     if (!root) return false;
@@ -55,34 +31,39 @@ function shouldEnableMetaFileSync(): boolean {
 }
 
 export function activate(context: ExtensionContext) {
-    configureSnippets(context);
-    configureOmnisharp();
-
     const unitySWpack = workspace.getConfiguration("unitySWpack");
 
     const features = [
         {
             enabled: unitySWpack.get("unityEventMessage"),
             register: () =>
-                languages.registerCodeLensProvider({ language: "csharp" }, new UnityEventMessageProvider()),
+                context.subscriptions.push(
+                    languages.registerCodeLensProvider({ language: "csharp" }, new UnityEventMessageProvider())
+                ),
         },
         {
             enabled: unitySWpack.get("usageScenePrefab"),
             register: () =>
-                languages.registerCodeLensProvider({ language: "csharp" }, new UsageScenePrefabProvider()),
+                context.subscriptions.push(
+                    languages.registerCodeLensProvider({ language: "csharp" }, new UsageScenePrefabProvider())
+                ),
         },
         {
             enabled: unitySWpack.get("unityMessageHover"),
             register: () =>
-                languages.registerHoverProvider({ language: "csharp" }, new UnityMessageHoverProvider()),
+                context.subscriptions.push(
+                    languages.registerHoverProvider({ language: "csharp" }, new UnityMessageHoverProvider())
+                ),
         },
         {
             enabled: unitySWpack.get("typeToggle"),
             register: () => {
-                languages.registerCodeLensProvider({ language: "csharp" }, new TypeToggleProvider());
-                commands.registerCommand("unitySWpack.changeReturnType", (returnType: string, line: number) => {
-                    returnMethodType(returnType, line);
-                });
+                context.subscriptions.push(
+                    languages.registerCodeLensProvider({ language: "csharp" }, new TypeToggleProvider()),
+                    commands.registerCommand("unitySWpack.changeReturnType", (returnType: string, line: number) => {
+                        returnMethodType(returnType, line);
+                    })
+                );
             },
         },
         {
@@ -92,7 +73,9 @@ export function activate(context: ExtensionContext) {
         {
             enabled: unitySWpack.get("searchInUnityDocs"),
             register: () =>
-                commands.registerCommand("unitySWpack.searchInUnityDocumentation", searchUnityDocs),
+                context.subscriptions.push(
+                    commands.registerCommand("unitySWpack.searchInUnityDocumentation", searchUnityDocs)
+                ),
         },
         {
             enabled: unitySWpack.get("unityEventLens"),
