@@ -87,6 +87,8 @@ Unity SW Pack 让你在 Visual Studio Code 中更顺手地编写 Unity C#。它�
 | `unitySWpack.unityEventLens`            | `true`  | 显示 UnityEvent 的连接位置                   |
 | `unitySWpack.onlyScenesInBuildSettings` | `false` | 仅从生成设置中列出的场景读取 UnityEvent 连接 |
 | `unitySWpack.debugLogging`              | `false` | 将索引过程记录到输出通道                     |
+| `unitySWpack.diagnostics`               | `true`  | 报告文件名不一致、缺失脚本和重复 GUID        |
+| `unitySWpack.performanceDiagnostics`    | `true`  | 同时指出每帧回调中开销较大的调用             |
 
 ## 说明
 

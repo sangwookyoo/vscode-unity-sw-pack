@@ -10,6 +10,25 @@
 이 프로젝트는 [Keep a Changelog](https://keepachangelog.com/ko/1.1.0/)를 따르며, 최신 릴리스를
 가장 위에 둡니다.
 
+## [2.2 Released]
+
+### 추가
+
+- 에디터가 보여주지 않는 Unity 문제를 알려줘요. 기본으로 켜져 있어요.
+    - 파일명과 클래스명이 다른 MonoBehaviour. Unity가 컴포넌트를 붙이지 못하는데
+      아무 말 없이 실패해요.
+    - 프로젝트에 없는 스크립트를 붙들고 있는 씬이나 프리팹.
+    - GUID가 겹친 스크립트. 대개 .meta 파일을 복사해서 생겨요.
+- 매 프레임 도는 콜백 안의 값비싼 호출을 짚어줘요. Camera.main, GameObject.Find
+  계열, GetComponent, SendMessage, Debug.Log, CompareTag 대신 문자열로 tag를
+  비교하는 코드, 반복문 안에서 만드는 yield 명령이 대상이에요. 비어 있는 Unity
+  콜백도 알려줘요. Unity가 계속 호출하거든요. 구문 기반 검사라서 알아볼 수 있는
+  Unity API 이름을 다루고, 타입까지 아는 분석기가 잡아내는 전부를 다루지는
+  않아요. Microsoft.Unity.Analyzers를 이미 쓰신다면
+  `unitySWpack.performanceDiagnostics`로 꺼두세요.
+- 씬·프리팹 참조 표시를 누르면 해당 파일이 열려요. 여러 개면 골라서 열 수 있어요.
+- 설정 `unitySWpack.diagnostics`와 `unitySWpack.performanceDiagnostics`를 추가했어요.
+
 ## [2.1 Released]
 
 ### 변경

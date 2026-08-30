@@ -25,6 +25,8 @@ import * as path from "path";
 import { logger } from "./logger";
 import {
     AssetContent,
+    DuplicateScriptGuid,
+    MissingScriptReference,
     assetKindOf,
     assetPathOfMeta,
     hasIgnoredSegment,
@@ -32,9 +34,20 @@ import {
     UnityAssetIndexState,
     UnityEventConnection,
 } from "./unity-asset-index-state";
-import { collectGuidReferences, parseBuildSettingsScenePaths, parseMetaGuid, parseUnityAsset } from "./unity-yaml";
+import {
+    collectGuidReferences,
+    collectScriptReferences,
+    parseBuildSettingsScenePaths,
+    parseMetaGuid,
+    parseUnityAsset,
+} from "./unity-yaml";
 
-export { AssetKind, UnityEventConnection } from "./unity-asset-index-state";
+export {
+    AssetKind,
+    DuplicateScriptGuid,
+    MissingScriptReference,
+    UnityEventConnection,
+} from "./unity-asset-index-state";
 
 const ASSETS_DIR = "Assets";
 const BUILD_SETTINGS_RELATIVE = "ProjectSettings/EditorBuildSettings.asset";
@@ -107,6 +120,16 @@ export class UnityAssetIndex implements Disposable {
     /** UnityEvent connections that involve the given class, by its simple name. */
     public getConnectionsForClass(className: string): UnityEventConnection[] {
         return this.state.getConnectionsForClass(className);
+    }
+
+    /** Scenes and prefabs attaching a script that is no longer in the project. */
+    public getMissingScriptReferences(): MissingScriptReference[] {
+        return this.state.getMissingScriptReferences();
+    }
+
+    /** GUIDs claimed by more than one script. */
+    public getDuplicateScriptGuids(): DuplicateScriptGuid[] {
+        return this.state.getDuplicateScriptGuids();
     }
 
     public dispose(): void {
@@ -386,11 +409,17 @@ export class UnityAssetIndex implements Disposable {
                 connections: data.connections,
                 gameObjectNames: data.gameObjectNames,
                 guids: data.referencedGuids,
+                scriptGuids: data.scriptGuids,
             };
         } else {
             // The scene is not in the build settings: keep it in the reverse index
             // for reference counts, but skip the (much costlier) YAML parse.
-            content = { connections: [], gameObjectNames: new Map(), guids: collectGuidReferences(text) };
+            content = {
+                connections: [],
+                gameObjectNames: new Map(),
+                guids: collectGuidReferences(text),
+                scriptGuids: collectScriptReferences(text),
+            };
         }
 
         // Replacing the whole entry evicts GameObject ids and connections that

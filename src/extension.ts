@@ -2,7 +2,11 @@ import { ExtensionContext, commands, env, languages, workspace } from "vscode";
 import * as fs from "fs";
 import * as path from "path";
 
-import { UsageScenePrefabProvider } from "./asset-usage-code-lens-provider";
+import {
+    OPEN_REFERENCES_COMMAND,
+    UsageScenePrefabProvider,
+    openAssetReference,
+} from "./asset-usage-code-lens-provider";
 import { TypeToggleProvider, returnMethodType } from "./coroutine-toggle";
 import { resolveLocale } from "./i18n/locale";
 import { initializeLogger } from "./logger";
@@ -10,6 +14,7 @@ import * as metaFileSync from "./meta-file-sync";
 import { searchUnityDocs } from "./search-unity-docs";
 import { registerSnippetCompletions } from "./snippet-completion-provider";
 import { UnityAssetIndex } from "./unity-asset-index";
+import { UnityDiagnostics } from "./unity-diagnostics";
 import * as unityEventLens from "./unity-event-lens";
 import { UnityMessageCodeLensProvider } from "./unity-message-code-lens-provider";
 import UnityMessageHoverProvider from "./unity-message-hover-provider";
@@ -61,7 +66,13 @@ export function activate(context: ExtensionContext) {
             enabled: unitySWpack.get("usageScenePrefab"),
             register: () => {
                 const provider = new UsageScenePrefabProvider(getAssetIndex());
-                context.subscriptions.push(provider, languages.registerCodeLensProvider(CSHARP, provider));
+                context.subscriptions.push(
+                    provider,
+                    languages.registerCodeLensProvider(CSHARP, provider),
+                    commands.registerCommand(OPEN_REFERENCES_COMMAND, (refs: string[], baseDir?: string) => {
+                        void openAssetReference(refs, baseDir);
+                    })
+                );
             },
         },
         {
@@ -96,6 +107,10 @@ export function activate(context: ExtensionContext) {
         {
             enabled: unitySWpack.get("unityEventLens"),
             register: () => unityEventLens.activate(context, getAssetIndex()),
+        },
+        {
+            enabled: unitySWpack.get("diagnostics"),
+            register: () => context.subscriptions.push(new UnityDiagnostics(getAssetIndex())),
         },
     ];
 

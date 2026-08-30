@@ -14,5 +14,8 @@
   "config.searchInUnityDocs": "選択した語を、プロジェクトのバージョンに合った Unity ドキュメントで検索するコマンドを追加します。",
   "config.unityEventLens": "メソッドや UnityEvent フィールドがシーンやプレハブのどこに接続されているかを表示します。",
   "config.onlyScenesInBuildSettings": "EditorBuildSettings に登録されたシーンからのみ UnityEvent の接続を読み取ります。参照数はすべてのシーンを対象にしたままです。",
-  "config.debugLogging": "インデックス処理を Unity SW Pack 出力チャネルに記録します。問題を報告するときに有効にしてください。"
+  "config.debugLogging": "インデックス処理を Unity SW Pack 出力チャネルに記録します。問題を報告するときに有効にしてください。",
+  "config.diagnostics": "エディターでは見えない Unity の問題を報告します。ファイル名とクラス名が一致しないスクリプト、すでに存在しないスクリプトを参照するシーンやプレハブ、GUID が重複したスクリプトです。",
+  "config.performanceDiagnostics": "毎フレーム実行される Unity コールバック内のコストの高い呼び出しも指摘します。Camera.main、GameObject.Find、GetComponent などです。Microsoft.Unity.Analyzers を使っている場合はオフにしてください。",
+  "cmd.openAssetReference": "このスクリプトを使うシーンまたはプレハブを開く"
 }

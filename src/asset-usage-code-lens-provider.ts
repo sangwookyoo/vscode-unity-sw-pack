@@ -5,8 +5,12 @@ import {
     Disposable,
     Event,
     EventEmitter,
+    QuickPickItem,
     TextDocument,
+    Uri,
+    commands,
     l10n,
+    window,
     workspace,
 } from "vscode";
 import { parser } from "./extension";
@@ -66,9 +70,12 @@ export class UsageScenePrefabProvider implements CodeLensProvider, Disposable {
 
         for (const { type, refs } of groups) {
             const cmd: Command = {
-                command: "", // informational lens
+                // With no references there is nothing to open, so the lens stays
+                // informational rather than offering an empty picker.
+                command: refs.length > 0 ? OPEN_REFERENCES_COMMAND : "",
                 title: getLocalizedTitle(type, refs.length),
                 tooltip: formatTooltip(refs, baseDir),
+                arguments: [refs, baseDir],
             };
 
             lenses.push(new CodeLens(doc.lineAt(classLine).range, cmd));
@@ -81,4 +88,42 @@ export class UsageScenePrefabProvider implements CodeLensProvider, Disposable {
         this.indexListener.dispose();
         this.changeEmitter.dispose();
     }
+}
+
+export const OPEN_REFERENCES_COMMAND = "unitySWpack.openAssetReference";
+
+/**
+ * Opens one of the scenes or prefabs the lens counted. A single reference opens
+ * straight away; several offer a picker, showing the path relative to Assets so
+ * the entries stay readable.
+ */
+export async function openAssetReference(refs: string[], baseDir?: string): Promise<void> {
+    if (!refs || refs.length === 0) {
+        return;
+    }
+
+    let target = refs[0];
+
+    if (refs.length > 1) {
+        const items: Array<QuickPickItem & { path: string }> = refs.map((filePath) => {
+            const relative = baseDir ? path.relative(baseDir, filePath) : filePath;
+            return {
+                label: path.basename(filePath),
+                description: relative.replace(/\\/g, "/"),
+                path: filePath,
+            };
+        });
+
+        const picked = await window.showQuickPick(items, {
+            placeHolder: l10n.t("Open a scene or prefab that uses this script"),
+            matchOnDescription: true,
+        });
+        if (!picked) {
+            return;
+        }
+        target = picked.path;
+    }
+
+    // Scenes and prefabs are YAML, so the text editor is the honest destination.
+    await commands.executeCommand("vscode.open", Uri.file(target));
 }

@@ -10,5 +10,19 @@
   "Called by {0} on {1} in prefab {2}": "プレハブ {2} の {1} から {0} で呼び出されます",
   "Select a word or place the cursor on one to search.": "検索する語を選択するか、語の上にカーソルを置いてください。",
   "Could not open the browser. Check your default browser setting.": "ブラウザーを開けませんでした。既定のブラウザー設定を確認してください。",
-  "Show Unity Event References": "Unity Event の参照を表示"
+  "Show Unity Event References": "Unity Event の参照を表示",
+  "Unity loads a {0} by file name, so this class has to be called {1}. Rename the class or the file.": "Unity は {0} をファイル名で読み込むため、このクラスは {1} という名前である必要があります。クラスかファイルの名前を変更してください。",
+  "This {0} attaches a script that is no longer in the project (GUID {1}). Unity shows it as a missing script.": "この{0}は、プロジェクトにもう存在しないスクリプトを参照しています（GUID {1}）。Unity では missing script と表示されます。",
+  "This script shares its GUID with {0}. Unity can only resolve one of them — delete the copied .meta file and let Unity create a new one.": "このスクリプトは {0} と GUID を共有しています。Unity はどちらか一方しか解決できません。コピーされた .meta ファイルを削除し、Unity に作り直させてください。",
+  "{0} is empty, and Unity still calls it every time. Delete it.": "{0} は空ですが、Unity は毎回呼び出します。削除することをおすすめします。",
+  "Camera.main searches the scene for the MainCamera tag on every access. Cache it in a field instead of reading it in {0}.": "Camera.main はアクセスのたびにシーンから MainCamera タグを探します。{0} で読むのではなく、フィールドに保持してください。",
+  "{0} walks the scene and gets slower as the scene grows. Look the object up once and keep the reference, rather than in {1}.": "{0} はシーンを走査するため、シーンが大きくなるほど遅くなります。{1} の中ではなく、一度取得して参照を保持してください。",
+  "{0} resolves the method by name at run time and skips the compiler's checks. Call the component directly, or raise a UnityEvent.": "{0} は実行時に名前でメソッドを解決し、コンパイラのチェックを回避します。コンポーネントを直接呼ぶか、UnityEvent を使ってください。",
+  "{0} searches the object's components on every call. Cache the result in Awake or Start instead of calling it in {1}.": "{0} は呼び出すたびにオブジェクトのコンポーネントを探します。{1} ではなく Awake か Start でキャッシュしてください。",
+  "{0} builds its message and writes to the log on every frame, even when the console is closed. Guard it or remove it from {1}.": "{0} はコンソールが閉じていても毎フレーム メッセージを構築してログに書き込みます。条件を付けるか {1} から取り除いてください。",
+  "Comparing tag with a string allocates. Use CompareTag, which does not.": "tag を文字列と比較すると割り当てが発生します。割り当ての起きない CompareTag を使ってください。",
+  "{0} allocates on every iteration. Create it once before the loop and reuse it.": "{0} は反復のたびに割り当てられます。ループの前で一度作成して再利用してください。",
+  "prefab": "プレハブ",
+  "scene": "シーン",
+  "Open a scene or prefab that uses this script": "このスクリプトを使うシーンまたはプレハブを開いてください"
 }

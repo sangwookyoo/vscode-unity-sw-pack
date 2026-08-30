@@ -14,5 +14,8 @@
   "config.searchInUnityDocs": "添加一个命令，在与项目版本匹配的 Unity 文档中搜索选中的词。",
   "config.unityEventLens": "显示方法或 UnityEvent 字段在场景和预制件中的连接位置。",
   "config.onlyScenesInBuildSettings": "仅从 EditorBuildSettings 中列出的场景读取 UnityEvent 连接。引用计数仍覆盖所有场景。",
-  "config.debugLogging": "将索引过程记录到 Unity SW Pack 输出通道。反馈问题时请开启。"
+  "config.debugLogging": "将索引过程记录到 Unity SW Pack 输出通道。反馈问题时请开启。",
+  "config.diagnostics": "报告编辑器看不到的 Unity 问题：文件名与类名不一致的脚本、仍引用已删除脚本的场景或预制件、以及共用同一 GUID 的脚本。",
+  "config.performanceDiagnostics": "同时指出每帧运行的 Unity 回调中开销较大的调用，例如 Camera.main、GameObject.Find 和 GetComponent。若已使用 Microsoft.Unity.Analyzers，可关闭此项。",
+  "cmd.openAssetReference": "打开使用该脚本的场景或预制件"
 }

@@ -2,7 +2,7 @@
   "name": "unity-sw-pack",
   "displayName": "%ext.displayName%",
   "description": "%ext.description%",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "publisher": "SangwookYoo",
   "icon": "images/icon.png",
   "license": "MIT",
@@ -85,6 +85,16 @@
           "type": "boolean",
           "default": false,
           "description": "%config.debugLogging%"
+        },
+        "unitySWpack.diagnostics": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.diagnostics%"
+        },
+        "unitySWpack.performanceDiagnostics": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.performanceDiagnostics%"
         }
       }
     },
@@ -99,6 +109,10 @@
       "commandPalette": [
         {
           "command": "unitySWpack.showEventReferences",
+          "when": "false"
+        },
+        {
+          "command": "unitySWpack.openAssetReference",
           "when": "false"
         }
       ],
@@ -122,6 +136,10 @@
       {
         "command": "unitySWpack.showEventReferences",
         "title": "%cmd.showEventReferences%"
+      },
+      {
+        "command": "unitySWpack.openAssetReference",
+        "title": "%cmd.openAssetReference%"
       }
     ],
     "keybindings": [

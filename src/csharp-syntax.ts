@@ -285,3 +285,50 @@ export function findUnityEventFields(source: string): CSharpMember[] {
 export function findPublicMethods(source: string): CSharpMember[] {
     return collectMembers(source, publicMethodRegex, 2, 1);
 }
+
+/** A type that Unity loads from a file, and therefore must be named after it. */
+export interface UnityScriptType {
+    /** Type name as declared. */
+    name: string;
+    /** Base type Unity cares about. */
+    baseType: string;
+    /** Offset of the type name in the original source. */
+    index: number;
+}
+
+// Unity resolves a MonoBehaviour or ScriptableObject by file name, so the type
+// name has to match. Only a type declared at the top level of the file is
+// affected; a nested type is never loaded from the file directly.
+const unityBaseTypes = ["MonoBehaviour", "ScriptableObject", "NetworkBehaviour", "StateMachineBehaviour"];
+const unityTypeDeclarationRegex = /\bclass\s+(\w+)\s*(?:<[^<>()]*>)?\s*:\s*([A-Za-z_][\w.]*)/g;
+
+/**
+ * Types in the file that Unity loads by file name, paired with the base type
+ * that makes them subject to the rule.
+ */
+export function findUnityScriptTypes(source: string): UnityScriptType[] {
+    const masked = maskCommentsAndStrings(source);
+    const scopes = findTypeScopes(masked);
+    const results: UnityScriptType[] = [];
+
+    unityTypeDeclarationRegex.lastIndex = 0;
+    let match: RegExpExecArray | null;
+    while ((match = unityTypeDeclarationRegex.exec(masked)) !== null) {
+        const baseType = match[2].split(".").pop() ?? match[2];
+        if (!unityBaseTypes.includes(baseType)) {
+            continue;
+        }
+
+        const nameIndex = match.index + match[0].indexOf(match[1]);
+
+        // A nested type is not loaded from the file, so the rule does not apply.
+        const containing = scopes.filter((scope) => scope.start < nameIndex && scope.end > nameIndex);
+        if (containing.length > 0) {
+            continue;
+        }
+
+        results.push({ name: match[1], baseType, index: nameIndex });
+    }
+
+    return results;
+}

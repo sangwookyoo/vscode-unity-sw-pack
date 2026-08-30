@@ -35,6 +35,21 @@ export interface AssetContent {
     connections: RawEventConnection[];
     gameObjectNames: Map<string, string>;
     guids: Set<string>;
+    /** GUIDs referenced through m_Script, used to spot broken script links. */
+    scriptGuids: Set<string>;
+}
+
+/** A scene or prefab attaching a script that is not in the project any more. */
+export interface MissingScriptReference {
+    assetPath: string;
+    kind: AssetKind;
+    guid: string;
+}
+
+/** Two or more scripts sharing one GUID, which Unity cannot resolve. */
+export interface DuplicateScriptGuid {
+    guid: string;
+    scriptPaths: string[];
 }
 
 interface AssetEntry {
@@ -42,6 +57,7 @@ interface AssetEntry {
     kind: AssetKind;
     connections: RawEventConnection[];
     gameObjectNames: Map<string, string>;
+    scriptGuids: Set<string>;
 }
 
 export const SCRIPT_META_SUFFIX = ".cs.meta";
@@ -87,8 +103,13 @@ export function hasIgnoredSegment(relativePath: string): boolean {
 export class UnityAssetIndexState {
     /** GUID of a script file, keyed by the normalized .cs path. */
     private guidByScriptPath = new Map<string, string>();
-    /** Script paths currently mapped to a GUID; a rename can hold two for a moment. */
-    private scriptPathsByGuid = new Map<string, Set<string>>();
+    /**
+     * Script paths currently mapped to a GUID; a rename can hold two for a
+     * moment. Keyed by the normalized path so lookups match the watcher, with
+     * the original path as the value — a diagnostic has to point at the file as
+     * it is actually named, not at the lower-cased key.
+     */
+    private scriptPathsByGuid = new Map<string, Map<string, string>>();
     /** Class name (file name) of a script, keyed by its GUID. */
     private classNameByGuid = new Map<string, string>();
     /** Indexed scenes and prefabs, keyed by their normalized path. */
@@ -121,10 +142,10 @@ export class UnityAssetIndexState {
 
         let paths = this.scriptPathsByGuid.get(guid);
         if (!paths) {
-            paths = new Set<string>();
+            paths = new Map<string, string>();
             this.scriptPathsByGuid.set(guid, paths);
         }
-        paths.add(key);
+        paths.set(key, scriptPath);
 
         this.classNameByGuid.set(guid, assetBaseName(scriptPath));
         this.connectionsByClass = undefined;
@@ -175,6 +196,7 @@ export class UnityAssetIndexState {
             kind,
             connections: content.connections,
             gameObjectNames: content.gameObjectNames,
+            scriptGuids: content.scriptGuids,
         });
         this.guidReferences.set(key, content.guids);
         this.connectionsByClass = undefined;
@@ -287,6 +309,48 @@ export class UnityAssetIndexState {
             event: raw.event,
             kind: entry.kind,
         };
+    }
+
+    // --- diagnostics --------------------------------------------------------
+
+    /**
+     * Scenes and prefabs attaching a script GUID no script in the project owns.
+     * Unity shows these as "Missing (Mono Script)" and silently drops the
+     * component's data.
+     */
+    public getMissingScriptReferences(): MissingScriptReference[] {
+        const missing: MissingScriptReference[] = [];
+
+        for (const entry of this.assets.values()) {
+            for (const guid of entry.scriptGuids) {
+                if (!this.classNameByGuid.has(guid)) {
+                    missing.push({ assetPath: entry.path, kind: entry.kind, guid });
+                }
+            }
+        }
+
+        return missing;
+    }
+
+    /**
+     * GUIDs claimed by more than one script, which usually means a .meta file
+     * was copied. Unity resolves such a reference to only one of them.
+     */
+    public getDuplicateScriptGuids(): DuplicateScriptGuid[] {
+        const duplicates: DuplicateScriptGuid[] = [];
+
+        for (const [guid, paths] of this.scriptPathsByGuid) {
+            if (paths.size > 1) {
+                duplicates.push({ guid, scriptPaths: [...paths.values()].sort() });
+            }
+        }
+
+        return duplicates;
+    }
+
+    /** Script paths currently mapped to the given GUID, as they are named on disk. */
+    public getScriptPaths(guid: string): string[] {
+        return [...(this.scriptPathsByGuid.get(guid)?.values() ?? [])].sort();
     }
 
     // --- lifecycle ----------------------------------------------------------

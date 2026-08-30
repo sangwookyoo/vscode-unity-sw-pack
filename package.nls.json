@@ -14,5 +14,8 @@
   "config.searchInUnityDocs": "Add a command that searches the selected word in the Unity documentation for your project version.",
   "config.unityEventLens": "Show where a method or UnityEvent field is wired up in scenes and prefabs.",
   "config.onlyScenesInBuildSettings": "Only read UnityEvent wiring from the scenes listed in EditorBuildSettings. Reference counts still cover every scene.",
-  "config.debugLogging": "Write indexing details to the Unity SW Pack output channel. Turn this on when reporting a problem."
+  "config.debugLogging": "Write indexing details to the Unity SW Pack output channel. Turn this on when reporting a problem.",
+  "config.diagnostics": "Report Unity problems the editor cannot see: a script whose file name does not match its class, a scene or prefab attaching a script that no longer exists, and two scripts sharing a GUID.",
+  "config.performanceDiagnostics": "Also point out costly calls inside Unity callbacks that run every frame, such as Camera.main, GameObject.Find and GetComponent. Turn this off if you already use Microsoft.Unity.Analyzers.",
+  "cmd.openAssetReference": "Open a scene or prefab that uses this script"
 }

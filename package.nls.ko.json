@@ -14,5 +14,8 @@
   "config.searchInUnityDocs": "선택한 단어를 프로젝트 버전에 맞는 Unity 문서에서 찾는 명령을 추가해요.",
   "config.unityEventLens": "메서드나 UnityEvent 필드가 씬과 프리팹의 어디에 연결돼 있는지 보여줘요.",
   "config.onlyScenesInBuildSettings": "EditorBuildSettings에 등록된 씬에서만 UnityEvent 연결을 읽어요. 참조 개수는 모든 씬을 그대로 세요.",
-  "config.debugLogging": "인덱싱 과정을 Unity SW Pack 출력 채널에 기록해요. 문제를 알릴 때 켜세요."
+  "config.debugLogging": "인덱싱 과정을 Unity SW Pack 출력 채널에 기록해요. 문제를 알릴 때 켜세요.",
+  "config.diagnostics": "에디터가 보여주지 않는 Unity 문제를 알려줘요. 파일명과 클래스명이 다른 스크립트, 사라진 스크립트를 붙들고 있는 씬·프리팹, GUID가 겹친 스크립트를 찾아요.",
+  "config.performanceDiagnostics": "매 프레임 도는 Unity 콜백 안의 값비싼 호출도 함께 짚어줘요. Camera.main, GameObject.Find, GetComponent 같은 것들이에요. Microsoft.Unity.Analyzers를 이미 쓰신다면 꺼두세요.",
+  "cmd.openAssetReference": "이 스크립트를 쓰는 씬 또는 프리팹 열기"
 }

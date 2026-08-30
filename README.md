@@ -81,17 +81,19 @@ project root. Scene and prefab features need it to find your assets.
 
 ## Settings
 
-| Setting                                 | Default | What it does                                                  |
-| --------------------------------------- | ------- | ------------------------------------------------------------- |
-| `unitySWpack.unityEventMessage`         | `true`  | Mark the methods Unity calls for you                          |
-| `unitySWpack.usageScenePrefab`          | `true`  | Show how many scenes and prefabs use the script               |
-| `unitySWpack.unityMessageHover`         | `true`  | Explain a Unity message on hover                              |
-| `unitySWpack.typeToggle`                | `true`  | Offer the `void` ↔ `IEnumerator` switch                       |
-| `unitySWpack.metaFileSync`              | `true`  | Keep `.meta` files in step with renames and deletes           |
-| `unitySWpack.searchInUnityDocs`         | `true`  | Add the documentation search command                          |
-| `unitySWpack.unityEventLens`            | `true`  | Show where UnityEvents are wired up                           |
-| `unitySWpack.onlyScenesInBuildSettings` | `false` | Read UnityEvent wiring only from scenes in the build settings |
-| `unitySWpack.debugLogging`              | `false` | Log indexing details to the Unity SW Pack output channel      |
+| Setting                                 | Default | What it does                                                       |
+| --------------------------------------- | ------- | ------------------------------------------------------------------ |
+| `unitySWpack.unityEventMessage`         | `true`  | Mark the methods Unity calls for you                               |
+| `unitySWpack.usageScenePrefab`          | `true`  | Show how many scenes and prefabs use the script                    |
+| `unitySWpack.unityMessageHover`         | `true`  | Explain a Unity message on hover                                   |
+| `unitySWpack.typeToggle`                | `true`  | Offer the `void` ↔ `IEnumerator` switch                            |
+| `unitySWpack.metaFileSync`              | `true`  | Keep `.meta` files in step with renames and deletes                |
+| `unitySWpack.searchInUnityDocs`         | `true`  | Add the documentation search command                               |
+| `unitySWpack.unityEventLens`            | `true`  | Show where UnityEvents are wired up                                |
+| `unitySWpack.onlyScenesInBuildSettings` | `false` | Read UnityEvent wiring only from scenes in the build settings      |
+| `unitySWpack.debugLogging`              | `false` | Log indexing details to the Unity SW Pack output channel           |
+| `unitySWpack.diagnostics`               | `true`  | Report script-name mismatches, missing scripts and duplicate GUIDs |
+| `unitySWpack.performanceDiagnostics`    | `true`  | Also point out costly calls inside per-frame callbacks             |
 
 ## Notes
 

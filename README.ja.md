@@ -81,17 +81,19 @@ Unity SW Pack は、Visual Studio Code で Unity C# を書く作業を快適に�
 
 ## 設定
 
-| 設定                                    | 既定値  | 内容                                                   |
-| --------------------------------------- | ------- | ------------------------------------------------------ |
-| `unitySWpack.unityEventMessage`         | `true`  | Unity が自動的に呼び出すメソッドを示す                 |
-| `unitySWpack.usageScenePrefab`          | `true`  | スクリプトを使うシーンとプレハブの数を表示する         |
-| `unitySWpack.unityMessageHover`         | `true`  | ホバー時に Unity メッセージを説明する                  |
-| `unitySWpack.typeToggle`                | `true`  | `void` ↔ `IEnumerator` の切り替えを提供する            |
-| `unitySWpack.metaFileSync`              | `true`  | 名前変更・削除に合わせて `.meta` を保つ                |
-| `unitySWpack.searchInUnityDocs`         | `true`  | ドキュメント検索コマンドを追加する                     |
-| `unitySWpack.unityEventLens`            | `true`  | UnityEvent の接続先を表示する                          |
-| `unitySWpack.onlyScenesInBuildSettings` | `false` | ビルド設定にあるシーンからのみ UnityEvent の接続を読む |
-| `unitySWpack.debugLogging`              | `false` | インデックス処理を出力チャネルに記録する               |
+| 設定                                    | 既定値  | 内容                                                          |
+| --------------------------------------- | ------- | ------------------------------------------------------------- |
+| `unitySWpack.unityEventMessage`         | `true`  | Unity が自動的に呼び出すメソッドを示す                        |
+| `unitySWpack.usageScenePrefab`          | `true`  | スクリプトを使うシーンとプレハブの数を表示する                |
+| `unitySWpack.unityMessageHover`         | `true`  | ホバー時に Unity メッセージを説明する                         |
+| `unitySWpack.typeToggle`                | `true`  | `void` ↔ `IEnumerator` の切り替えを提供する                   |
+| `unitySWpack.metaFileSync`              | `true`  | 名前変更・削除に合わせて `.meta` を保つ                       |
+| `unitySWpack.searchInUnityDocs`         | `true`  | ドキュメント検索コマンドを追加する                            |
+| `unitySWpack.unityEventLens`            | `true`  | UnityEvent の接続先を表示する                                 |
+| `unitySWpack.onlyScenesInBuildSettings` | `false` | ビルド設定にあるシーンからのみ UnityEvent の接続を読む        |
+| `unitySWpack.debugLogging`              | `false` | インデックス処理を出力チャネルに記録する                      |
+| `unitySWpack.diagnostics`               | `true`  | ファイル名の不一致、失われたスクリプト、GUID の重複を報告する |
+| `unitySWpack.performanceDiagnostics`    | `true`  | 毎フレームのコールバック内のコストの高い呼び出しも指摘する    |
 
 ## 補足
 

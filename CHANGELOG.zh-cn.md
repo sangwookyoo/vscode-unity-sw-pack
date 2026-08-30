@@ -9,6 +9,22 @@
 
 本项目遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，最新版本列在最前面。
 
+## [2.2 Released]
+
+### 新增
+
+- 报告编辑器看不到的 Unity 问题，默认开启：
+    - 文件名与类名不一致的 MonoBehaviour，Unity 根本无法附加，且不会给出任何提示；
+    - 引用了项目中已不存在脚本的场景或预制件；
+    - 共用同一 GUID 的脚本，通常源于复制的 .meta 文件。
+- 指出每帧运行的回调中开销较大的调用：Camera.main、GameObject.Find 系列、
+  GetComponent、SendMessage、Debug.Log、用字符串而非 CompareTag 比较 tag，
+  以及在循环内分配的 yield 指令。空的 Unity 回调也会报告，因为 Unity 仍会调用它们。
+  这是基于语法的检查，覆盖能够识别的 Unity API 名称，并非类型感知分析器所能发现的全部。
+  若已使用 Microsoft.Unity.Analyzers，可通过 `unitySWpack.performanceDiagnostics` 关闭。
+- 场景与预制件引用提示现在可点击，会直接打开资源；有多个时提供选择列表。
+- 新增设置 `unitySWpack.diagnostics` 和 `unitySWpack.performanceDiagnostics`。
+
 ## [2.1 Released]
 
 ### 变更

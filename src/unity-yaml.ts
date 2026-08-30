@@ -26,6 +26,12 @@ export interface UnityAssetData {
     gameObjectNames: Map<string, string>;
     /** Every asset GUID referenced by the file (reverse index source). */
     referencedGuids: Set<string>;
+    /**
+     * GUIDs referenced through m_Script, i.e. the scripts the assets attaches.
+     * Kept apart from referencedGuids, which also holds materials, textures and
+     * everything else, so a missing script can be told from a missing texture.
+     */
+    scriptGuids: Set<string>;
 }
 
 export type WarnFunction = (message: string, ...args: unknown[]) => void;
@@ -125,7 +131,12 @@ export function parseUnityAsset(text: string, warn?: WarnFunction): UnityAssetDa
         }
     }
 
-    return { connections, gameObjectNames, referencedGuids: collectGuidReferences(text) };
+    return {
+        connections,
+        gameObjectNames,
+        referencedGuids: collectGuidReferences(text),
+        scriptGuids: collectScriptReferences(text),
+    };
 }
 
 function parseMonoBehaviour(behaviour: any, fileId: string, fileIdsToGuids: Map<string, string>): RawEventConnection[] {
@@ -217,3 +228,21 @@ const tagConstructorOptions = {
 
 const unityTag = new yaml.Type("tag:unity3d.com", tagConstructorOptions);
 const unitySchema = yaml.DEFAULT_SCHEMA.extend([unityTag]);
+
+// Unity serializes a script reference as m_Script with the MonoScript fileID.
+// Matching that exact shape keeps material and texture GUIDs out of the result.
+const scriptReferenceRegex = /m_Script:\s*\{\s*fileID:\s*11500000\s*,\s*guid:\s*([0-9a-fA-F]{32})\s*,/g;
+
+/** GUIDs of the scripts a scene or prefab attaches. */
+export function collectScriptReferences(text: string): Set<string> {
+    const guids = new Set<string>();
+    scriptReferenceRegex.lastIndex = 0;
+
+    let match: RegExpExecArray | null;
+    while ((match = scriptReferenceRegex.exec(text)) !== null) {
+        // Kept verbatim: .meta GUIDs are read the same way, so the two agree.
+        guids.add(match[1]);
+    }
+
+    return guids;
+}

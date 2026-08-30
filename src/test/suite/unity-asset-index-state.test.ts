@@ -39,12 +39,14 @@ function connection(overrides: Partial<RawEventConnection> = {}): RawEventConnec
 function content(
     connections: RawEventConnection[] = [],
     gameObjectNames: Array<[string, string]> = [],
-    guids: string[] = []
+    guids: string[] = [],
+    scriptGuids: string[] = []
 ) {
     return {
         connections,
         gameObjectNames: new Map(gameObjectNames),
         guids: new Set(guids),
+        scriptGuids: new Set(scriptGuids),
     };
 }
 
@@ -314,5 +316,113 @@ suite("UnityAssetIndexState lifecycle", () => {
         assert.strictEqual(state.getClassName("guid-player"), undefined);
         assert.deepStrictEqual(state.getReferences("guid-player", "scene"), []);
         assert.ok(state.shouldIndexConnections(scenePath("Menu"), "scene", ROOT, true));
+    });
+});
+
+suite("UnityAssetIndexState missing scripts", () => {
+    test("an asset attaching a known script reports nothing", () => {
+        const state = new UnityAssetIndexState();
+        state.setScript(scriptPath("Player"), "guid-player");
+        state.setAsset(scenePath("Main"), "scene", content([], [], ["guid-player"], ["guid-player"]));
+
+        assert.deepStrictEqual(state.getMissingScriptReferences(), []);
+    });
+
+    test("an asset attaching an unknown script is reported", () => {
+        const state = new UnityAssetIndexState();
+        state.setAsset(scenePath("Main"), "scene", content([], [], ["guid-gone"], ["guid-gone"]));
+
+        const missing = state.getMissingScriptReferences();
+        assert.strictEqual(missing.length, 1);
+        assert.strictEqual(missing[0].assetPath, scenePath("Main"));
+        assert.strictEqual(missing[0].guid, "guid-gone");
+        assert.strictEqual(missing[0].kind, "scene");
+    });
+
+    // A texture or material GUID is not a script GUID, which is why the two
+    // sets are kept apart at parse time.
+    test("a non-script GUID is never mistaken for a missing script", () => {
+        const state = new UnityAssetIndexState();
+        state.setAsset(scenePath("Main"), "scene", content([], [], ["guid-material"], []));
+
+        assert.deepStrictEqual(state.getMissingScriptReferences(), []);
+    });
+
+    test("prefabs are reported too, with their kind", () => {
+        const state = new UnityAssetIndexState();
+        state.setAsset(prefabPath("Button"), "prefab", content([], [], [], ["guid-gone"]));
+
+        assert.strictEqual(state.getMissingScriptReferences()[0].kind, "prefab");
+    });
+
+    test("the report clears once the script comes back", () => {
+        const state = new UnityAssetIndexState();
+        state.setAsset(scenePath("Main"), "scene", content([], [], [], ["guid-player"]));
+        assert.strictEqual(state.getMissingScriptReferences().length, 1);
+
+        state.setScript(scriptPath("Player"), "guid-player");
+        assert.deepStrictEqual(state.getMissingScriptReferences(), []);
+    });
+
+    test("removing the asset clears its report", () => {
+        const state = new UnityAssetIndexState();
+        state.setAsset(scenePath("Main"), "scene", content([], [], [], ["guid-gone"]));
+        state.removeAsset(scenePath("Main"));
+
+        assert.deepStrictEqual(state.getMissingScriptReferences(), []);
+    });
+});
+
+suite("UnityAssetIndexState duplicate GUIDs", () => {
+    test("one script per GUID is not a duplicate", () => {
+        const state = new UnityAssetIndexState();
+        state.setScript(scriptPath("Player"), "guid-player");
+        state.setScript(scriptPath("Enemy"), "guid-enemy");
+
+        assert.deepStrictEqual(state.getDuplicateScriptGuids(), []);
+    });
+
+    // Copying a .meta alongside a script is how this happens in practice.
+    test("two scripts claiming one GUID are reported with both paths", () => {
+        const state = new UnityAssetIndexState();
+        state.setScript(scriptPath("Player"), "guid-shared");
+        state.setScript(scriptPath("PlayerCopy"), "guid-shared");
+
+        const duplicates = state.getDuplicateScriptGuids();
+        assert.strictEqual(duplicates.length, 1);
+        assert.strictEqual(duplicates[0].guid, "guid-shared");
+        assert.deepStrictEqual(duplicates[0].scriptPaths, [scriptPath("Player"), scriptPath("PlayerCopy")].sort());
+    });
+
+    // A rename hands over the same GUID; once the old path is gone it is not a
+    // duplicate, and the flush applies removals first so this is the settled state.
+    test("a completed rename is not reported as a duplicate", () => {
+        const state = new UnityAssetIndexState();
+        state.setScript(scriptPath("Player"), "guid-shared");
+        state.removeScript(scriptPath("Player"));
+        state.setScript(scriptPath("Enemy"), "guid-shared");
+
+        assert.deepStrictEqual(state.getDuplicateScriptGuids(), []);
+    });
+
+    test("deleting one of the copies clears the report", () => {
+        const state = new UnityAssetIndexState();
+        state.setScript(scriptPath("Player"), "guid-shared");
+        state.setScript(scriptPath("PlayerCopy"), "guid-shared");
+        state.removeScript(scriptPath("PlayerCopy"));
+
+        assert.deepStrictEqual(state.getDuplicateScriptGuids(), []);
+    });
+
+    test("clear() drops the reports as well", () => {
+        const state = new UnityAssetIndexState();
+        state.setScript(scriptPath("Player"), "guid-shared");
+        state.setScript(scriptPath("PlayerCopy"), "guid-shared");
+        state.setAsset(scenePath("Main"), "scene", content([], [], [], ["guid-gone"]));
+
+        state.clear();
+
+        assert.deepStrictEqual(state.getDuplicateScriptGuids(), []);
+        assert.deepStrictEqual(state.getMissingScriptReferences(), []);
     });
 });

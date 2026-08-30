@@ -90,6 +90,8 @@ Unity SW Pack은 VS Code에서 Unity C#을 편하게 쓰도록 도와줘요. Uni
 | `unitySWpack.unityEventLens`            | `true`  | UnityEvent 연결 위치를 보여줘요                      |
 | `unitySWpack.onlyScenesInBuildSettings` | `false` | 빌드 설정에 등록된 씬에서만 UnityEvent 연결을 읽어요 |
 | `unitySWpack.debugLogging`              | `false` | 인덱싱 과정을 출력 채널에 기록해요                   |
+| `unitySWpack.diagnostics`               | `true`  | 파일명 불일치, 사라진 스크립트, GUID 중복을 알려줘요 |
+| `unitySWpack.performanceDiagnostics`    | `true`  | 매 프레임 콜백 안의 값비싼 호출도 짚어줘요           |
 
 ## 알아두면 좋은 점
 

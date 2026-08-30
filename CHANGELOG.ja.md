@@ -10,6 +10,27 @@
 このプロジェクトは [Keep a Changelog](https://keepachangelog.com/ja/1.1.0/) に従い、最新の
 リリースを先頭に置いています。
 
+## [2.2 Released]
+
+### 追加
+
+- エディターでは見えない Unity の問題を報告します。既定で有効です。
+    - ファイル名とクラス名が一致しない MonoBehaviour。Unity はアタッチできず、
+      しかも何も知らせずに失敗します。
+    - プロジェクトにもう存在しないスクリプトを参照するシーンやプレハブ。
+    - GUID が重複したスクリプト。多くは .meta ファイルのコピーが原因です。
+- 毎フレーム実行されるコールバック内のコストの高い呼び出しを指摘します。
+  Camera.main、GameObject.Find 系、GetComponent、SendMessage、Debug.Log、
+  CompareTag ではなく文字列で tag を比較するコード、ループ内で生成される
+  yield 命令が対象です。空の Unity コールバックも報告します。Unity が呼び出し
+  続けるためです。構文ベースの検査なので、認識できる Unity API 名を扱うもので、
+  型を解決する解析器が見つけるすべてを網羅するものではありません。
+  Microsoft.Unity.Analyzers を使っている場合は
+  `unitySWpack.performanceDiagnostics` でオフにしてください。
+- シーンとプレハブの参照表示がクリックできるようになりました。アセットを開き、
+  複数ある場合は選択できます。
+- 設定 `unitySWpack.diagnostics` と `unitySWpack.performanceDiagnostics` を追加しました。
+
 ## [2.1 Released]
 
 ### 変更

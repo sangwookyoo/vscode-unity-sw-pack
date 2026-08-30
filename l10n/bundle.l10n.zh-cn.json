@@ -10,5 +10,19 @@
   "Called by {0} on {1} in prefab {2}": "由预制件 {2} 中 {1} 的 {0} 调用",
   "Select a word or place the cursor on one to search.": "请选中要搜索的词，或将光标放在词上。",
   "Could not open the browser. Check your default browser setting.": "无法打开浏览器，请检查默认浏览器设置。",
-  "Show Unity Event References": "显示 Unity Event 引用"
+  "Show Unity Event References": "显示 Unity Event 引用",
+  "Unity loads a {0} by file name, so this class has to be called {1}. Rename the class or the file.": "Unity 按文件名加载 {0}，因此该类必须命名为 {1}。请重命名类或文件。",
+  "This {0} attaches a script that is no longer in the project (GUID {1}). Unity shows it as a missing script.": "该{0}引用了项目中已不存在的脚本（GUID {1}）。Unity 会将其显示为 missing script。",
+  "This script shares its GUID with {0}. Unity can only resolve one of them — delete the copied .meta file and let Unity create a new one.": "该脚本与 {0} 共用同一个 GUID。Unity 只能识别其中之一，请删除复制的 .meta 文件，让 Unity 重新生成。",
+  "{0} is empty, and Unity still calls it every time. Delete it.": "{0} 是空的，但 Unity 仍会每次调用它。建议删除。",
+  "Camera.main searches the scene for the MainCamera tag on every access. Cache it in a field instead of reading it in {0}.": "Camera.main 每次访问都会在场景中查找 MainCamera 标签。请缓存到字段，而不要在 {0} 中读取。",
+  "{0} walks the scene and gets slower as the scene grows. Look the object up once and keep the reference, rather than in {1}.": "{0} 会遍历场景，场景越大越慢。请查找一次并保留引用，而不要放在 {1} 中。",
+  "{0} resolves the method by name at run time and skips the compiler's checks. Call the component directly, or raise a UnityEvent.": "{0} 在运行时按名称解析方法，绕过了编译器检查。请直接调用组件，或改用 UnityEvent。",
+  "{0} searches the object's components on every call. Cache the result in Awake or Start instead of calling it in {1}.": "{0} 每次调用都会搜索对象的组件。请在 Awake 或 Start 中缓存结果，而不要在 {1} 中调用。",
+  "{0} builds its message and writes to the log on every frame, even when the console is closed. Guard it or remove it from {1}.": "{0} 即使控制台关闭，也会每帧构建消息并写入日志。请加条件判断，或从 {1} 中移除。",
+  "Comparing tag with a string allocates. Use CompareTag, which does not.": "用字符串比较 tag 会产生分配。请改用不分配的 CompareTag。",
+  "{0} allocates on every iteration. Create it once before the loop and reuse it.": "{0} 每次迭代都会分配。请在循环前创建一次并重复使用。",
+  "prefab": "预制件",
+  "scene": "场景",
+  "Open a scene or prefab that uses this script": "打开使用该脚本的场景或预制件"
 }

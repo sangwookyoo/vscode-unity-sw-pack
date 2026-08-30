@@ -10,6 +10,27 @@
 This project follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), so the newest
 release is listed first.
 
+## [2.2 Released]
+
+### Added
+
+- Report Unity problems the editor cannot see, on by default:
+    - a MonoBehaviour whose file name does not match its class, which Unity
+      cannot attach at all and fails at silently;
+    - a scene or prefab attaching a script that is no longer in the project;
+    - two scripts sharing a GUID, usually from a copied .meta file.
+- Point out costly calls inside the callbacks that run every frame: Camera.main,
+  the GameObject.Find family, GetComponent, SendMessage, Debug.Log, comparing
+  tag with a string instead of CompareTag, and a yield instruction allocated
+  inside a loop. Empty Unity callbacks are reported too, since Unity keeps
+  calling them. This is a syntactic check, so it covers the Unity API names it
+  can recognise rather than everything a full type-aware analyser would find.
+  Turn it off with `unitySWpack.performanceDiagnostics` if you already use
+  Microsoft.Unity.Analyzers.
+- The scene and prefab reference lens is now clickable. It opens the asset, or
+  offers a picker when there is more than one.
+- Settings `unitySWpack.diagnostics` and `unitySWpack.performanceDiagnostics`.
+
 ## [2.1 Released]
 
 ### Changed

@@ -10,5 +10,19 @@
   "Called by {0} on {1} in prefab {2}": "{2} 프리팹의 {1}에서 {0}으로 호출돼요",
   "Select a word or place the cursor on one to search.": "검색할 단어를 선택하거나 단어 위에 커서를 두세요.",
   "Could not open the browser. Check your default browser setting.": "브라우저를 열지 못했어요. 기본 브라우저 설정을 확인해 주세요.",
-  "Show Unity Event References": "Unity 이벤트 참조 보기"
+  "Show Unity Event References": "Unity 이벤트 참조 보기",
+  "Unity loads a {0} by file name, so this class has to be called {1}. Rename the class or the file.": "Unity는 {0}을(를) 파일명으로 찾아요. 이 클래스 이름은 {1}이어야 해요. 클래스나 파일 이름을 바꿔 주세요.",
+  "This {0} attaches a script that is no longer in the project (GUID {1}). Unity shows it as a missing script.": "이 {0}이(가) 프로젝트에 없는 스크립트를 붙들고 있어요 (GUID {1}). Unity에서는 missing script로 보여요.",
+  "This script shares its GUID with {0}. Unity can only resolve one of them — delete the copied .meta file and let Unity create a new one.": "이 스크립트가 {0}과(와) GUID를 공유해요. Unity는 둘 중 하나만 인식하니, 복사된 .meta 파일을 지우고 Unity가 새로 만들게 해주세요.",
+  "{0} is empty, and Unity still calls it every time. Delete it.": "{0}이(가) 비어 있는데도 Unity가 계속 호출해요. 지우는 편이 좋아요.",
+  "Camera.main searches the scene for the MainCamera tag on every access. Cache it in a field instead of reading it in {0}.": "Camera.main은 접근할 때마다 씬에서 MainCamera 태그를 찾아요. {0} 안에서 읽지 말고 필드에 담아 두세요.",
+  "{0} walks the scene and gets slower as the scene grows. Look the object up once and keep the reference, rather than in {1}.": "{0}은(는) 씬을 훑기 때문에 씬이 커질수록 느려져요. {1} 안에서 부르지 말고 한 번 찾아 참조를 들고 계세요.",
+  "{0} resolves the method by name at run time and skips the compiler's checks. Call the component directly, or raise a UnityEvent.": "{0}은(는) 실행 중에 이름으로 메서드를 찾아서 컴파일러 검사를 건너뛰어요. 컴포넌트를 직접 호출하거나 UnityEvent를 쓰세요.",
+  "{0} searches the object's components on every call. Cache the result in Awake or Start instead of calling it in {1}.": "{0}은(는) 호출할 때마다 컴포넌트를 뒤져요. {1} 대신 Awake나 Start에서 한 번 찾아 두세요.",
+  "{0} builds its message and writes to the log on every frame, even when the console is closed. Guard it or remove it from {1}.": "{0}은(는) 콘솔이 닫혀 있어도 매 프레임 메시지를 만들고 기록해요. {1}에서 빼거나 조건을 거세요.",
+  "Comparing tag with a string allocates. Use CompareTag, which does not.": "tag를 문자열과 비교하면 메모리를 할당해요. 할당하지 않는 CompareTag를 쓰세요.",
+  "{0} allocates on every iteration. Create it once before the loop and reuse it.": "{0}이(가) 반복마다 새로 할당돼요. 반복문 앞에서 한 번 만들어 재사용하세요.",
+  "prefab": "프리팹",
+  "scene": "씬",
+  "Open a scene or prefab that uses this script": "이 스크립트를 쓰는 씬이나 프리팹을 여세요"
 }

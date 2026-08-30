@@ -61,6 +61,7 @@ suite("contributed commands", () => {
             "unitySWpack.searchInUnityDocumentation",
             "unitySWpack.changeReturnType",
             "unitySWpack.showEventReferences",
+            "unitySWpack.openAssetReference",
         ];
 
         for (const command of declared) {
@@ -80,6 +81,8 @@ suite("contributed commands", () => {
             "unityEventLens",
             "onlyScenesInBuildSettings",
             "debugLogging",
+            "diagnostics",
+            "performanceDiagnostics",
         ];
 
         for (const key of declared) {
@@ -165,5 +168,73 @@ suite("providers", () => {
         for (const removed of ["OnPlayerConnected", "OnServerInitialized", "OnLevelWasLoaded"]) {
             assert.ok(!labels.has(removed), `${removed} is not part of Unity 6 and should not be offered`);
         }
+    });
+});
+
+suite("diagnostics", () => {
+    /** Diagnostic.code is a string, a number, or an object carrying a link. */
+    function codeOf(diagnostic: vscode.Diagnostic): string {
+        const code = diagnostic.code;
+        if (code === undefined) {
+            return "";
+        }
+        return typeof code === "object" ? String(code.value) : String(code);
+    }
+
+    /** Diagnostics arrive asynchronously; wait for the collection to fill. */
+    async function waitForDiagnostics(uri: vscode.Uri, predicate: (found: vscode.Diagnostic[]) => boolean) {
+        for (let attempt = 0; attempt < 60; attempt++) {
+            const found = vscode.languages.getDiagnostics(uri).filter((d) => d.source === "Unity SW Pack");
+            if (predicate(found)) {
+                return found;
+            }
+            await new Promise((resolve) => setTimeout(resolve, 250));
+        }
+        return vscode.languages.getDiagnostics(uri).filter((d) => d.source === "Unity SW Pack");
+    }
+
+    function fixtureUri(...segments: string[]): vscode.Uri {
+        const root = vscode.workspace.workspaceFolders?.[0];
+        assert.ok(root, "the fixture project should be the workspace folder");
+        return vscode.Uri.joinPath(root.uri, ...segments);
+    }
+
+    suiteTeardown(async () => {
+        await vscode.commands.executeCommand("workbench.action.closeAllEditors");
+    });
+
+    test("a class whose name does not match its file is reported", async () => {
+        const uri = fixtureUri("Assets", "Scripts", "Renamed.cs");
+        await vscode.window.showTextDocument(await vscode.workspace.openTextDocument(uri));
+
+        const found = await waitForDiagnostics(uri, (d) => d.some((x) => codeOf(x) === "script-name-mismatch"));
+        const mismatch = found.find((d) => codeOf(d) === "script-name-mismatch");
+
+        assert.ok(mismatch, `expected a name mismatch; got ${found.map(codeOf).join(", ")}`);
+        assert.ok(mismatch.message.includes("Renamed"), "the message should name the file");
+    });
+
+    test("costly calls inside Update are reported", async () => {
+        const uri = fixtureUri("Assets", "Scripts", "Renamed.cs");
+        await vscode.window.showTextDocument(await vscode.workspace.openTextDocument(uri));
+
+        const found = await waitForDiagnostics(uri, (d) => d.some((x) => codeOf(x) === "camera-main"));
+        const codes = new Set(found.map(codeOf));
+
+        assert.ok(codes.has("camera-main"), `expected camera-main; got ${[...codes].join(", ")}`);
+        assert.ok(codes.has("find-object"), `expected find-object; got ${[...codes].join(", ")}`);
+        assert.ok(codes.has("debug-log"), `expected debug-log; got ${[...codes].join(", ")}`);
+        assert.ok(codes.has("empty-message"), `expected empty-message for LateUpdate; got ${[...codes].join(", ")}`);
+    });
+
+    test("a clean script is left alone", async () => {
+        const uri = fixtureUri("Assets", "Scripts", "AudioManager.cs");
+        await vscode.window.showTextDocument(await vscode.workspace.openTextDocument(uri));
+
+        // Give the provider the same chance to report as the failing cases get.
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+        const found = vscode.languages.getDiagnostics(uri).filter((d) => d.source === "Unity SW Pack");
+
+        assert.deepStrictEqual(found.map(codeOf), [], "AudioManager.cs has nothing wrong with it");
     });
 });
