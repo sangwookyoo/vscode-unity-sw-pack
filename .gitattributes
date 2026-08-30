@@ -1,0 +1,18 @@
+# Normalize line endings: LF in the repository, native in the working tree.
+* text=auto eol=lf
+
+# Explicit text types
+*.ts       text eol=lf
+*.js       text eol=lf
+*.json     text eol=lf
+*.md       text eol=lf
+*.yml      text eol=lf
+*.g4       text eol=lf
+
+# Binary assets — never normalize, never diff as text
+*.png      binary
+*.gif      binary
+*.vsix     binary
+
+# Generated / vendored output: keep out of diffs and language stats
+package-lock.json  -diff linguist-generated=true
