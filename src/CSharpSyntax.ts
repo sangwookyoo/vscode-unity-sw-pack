@@ -46,7 +46,10 @@ const typeReference = `[A-Za-z_][A-Za-z0-9_.]*(?:\\s*${genericArguments})?(?:\\s
 const methodModifiers = "(?:static|virtual|override|sealed|abstract|async|new|extern|unsafe|partial)";
 
 const namespaceRegex = /\bnamespace\s+([\w.]+)\s*[{;]/g;
-const typeDeclarationRegex = /\b(?:class|struct|record)\s+(\w+)/g;
+// "record class X" / "record struct X" declare a type named X, not one named
+// "class"; without the inner alternative the global regex would capture the
+// keyword and then skip past the real name.
+const typeDeclarationRegex = /\b(?:class|struct|record(?:\s+(?:class|struct))?)\s+(\w+)/g;
 const unityEventFieldRegex = /\bUnityEvent(?:\s*<[^<>()]*>)?\s+(\w+)\s*(?=[;=])/g;
 const publicMethodRegex = new RegExp(
     `\\bpublic\\b(?:\\s+${methodModifiers}\\b)*\\s+(${typeReference})\\s+(\\w+)\\s*(?:${genericArguments})?\\s*\\(`,

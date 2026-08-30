@@ -7,7 +7,6 @@
 *.json     text eol=lf
 *.md       text eol=lf
 *.yml      text eol=lf
-*.g4       text eol=lf
 
 # Binary assets — never normalize, never diff as text
 *.png      binary

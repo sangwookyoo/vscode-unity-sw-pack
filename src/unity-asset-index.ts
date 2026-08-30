@@ -5,6 +5,10 @@
 //   - a reverse GUID index (which scene/prefab references which GUID)
 //   - UnityEvent persistent-call connections from scenes AND prefabs
 // The file text itself is never retained.
+//
+// This module owns everything that needs "vscode": watchers, configuration,
+// scheduling and disk access. The state it maintains lives in
+// UnityAssetIndexState so that the mutation rules stay unit testable.
 import {
     ConfigurationChangeEvent,
     Disposable,
@@ -18,72 +22,25 @@ import {
 import * as fsp from "fs/promises";
 import * as path from "path";
 
-import { GuidReferenceIndex } from "./guid-reference-index";
 import { logger } from "./logger";
-import { assetBaseName, simpleClassName } from "./unity-naming";
 import {
-    collectGuidReferences,
-    parseBuildSettingsScenePaths,
-    parseMetaGuid,
-    parseUnityAsset,
-    RawEventConnection,
-} from "./unity-yaml";
+    AssetContent,
+    assetKindOf,
+    assetPathOfMeta,
+    hasIgnoredSegment,
+    isScriptMeta,
+    UnityAssetIndexState,
+    UnityEventConnection,
+} from "./unity-asset-index-state";
+import { collectGuidReferences, parseBuildSettingsScenePaths, parseMetaGuid, parseUnityAsset } from "./unity-yaml";
 
-/** A UnityEvent connection with every GUID already resolved to a display name. */
-export interface UnityEventConnection {
-    /** Absolute path of the scene or prefab that holds the connection. */
-    assetPath: string;
-    /** Scene or prefab name without extension. */
-    assetName: string;
-    /** Name of the GameObject the calling component sits on. */
-    gameObject: string;
-    /** Class that declares the UnityEvent field. */
-    callingClass: string;
-    /** Class whose method is invoked. */
-    calledClass: string;
-    /** Invoked method name. */
-    calledMethod: string;
-    /** Name of the UnityEvent field. */
-    event: string;
-    /** Whether the connection lives in a scene or in a prefab. */
-    kind: AssetKind;
-}
+export { AssetKind, UnityEventConnection } from "./unity-asset-index-state";
 
-export type AssetKind = "scene" | "prefab";
-
-interface AssetEntry {
-    path: string;
-    kind: AssetKind;
-    connections: RawEventConnection[];
-    gameObjectNames: Map<string, string>;
-}
-
-const SCRIPT_META_SUFFIX = ".cs.meta";
 const ASSETS_DIR = "Assets";
 const BUILD_SETTINGS_RELATIVE = "ProjectSettings/EditorBuildSettings.asset";
 const ASSET_GLOB = `${ASSETS_DIR}/**/*.{meta,unity,prefab}`;
 const DEBOUNCE_MS = 150;
 const READ_CONCURRENCY = 32;
-
-function normalizeKey(filePath: string): string {
-    const normalized = path.normalize(filePath);
-    return process.platform === "win32" ? normalized.toLowerCase() : normalized;
-}
-
-function assetKind(filePath: string): AssetKind | undefined {
-    const ext = path.extname(filePath).toLowerCase();
-    if (ext === ".unity") {
-        return "scene";
-    }
-    if (ext === ".prefab") {
-        return "prefab";
-    }
-    return undefined;
-}
-
-function isScriptMeta(filePath: string): boolean {
-    return filePath.toLowerCase().endsWith(SCRIPT_META_SUFFIX);
-}
 
 async function mapWithConcurrency<T>(items: T[], limit: number, worker: (item: T) => Promise<void>): Promise<void> {
     let cursor = 0;
@@ -97,28 +54,25 @@ async function mapWithConcurrency<T>(items: T[], limit: number, worker: (item: T
 }
 
 export class UnityAssetIndex implements Disposable {
-    /** GUID of a script file, keyed by the normalized .cs path. */
-    private guidByScriptPath = new Map<string, string>();
-    /** Class name (file name) of a script, keyed by its GUID. */
-    private classNameByGuid = new Map<string, string>();
-    /** Indexed scenes and prefabs, keyed by their normalized path. */
-    private assets = new Map<string, AssetEntry>();
-    /** Reverse index: GUID -> normalized paths of the assets referencing it. */
-    private guidReferences = new GuidReferenceIndex();
-    /** Scene paths listed in EditorBuildSettings.asset, keyed by project root. */
-    private buildSettingsScenes = new Map<string, string[]>();
-
-    /** Connections grouped by simple class name; rebuilt lazily after a change. */
-    private connectionsByClass?: Map<string, UnityEventConnection[]>;
+    private state = new UnityAssetIndexState();
 
     private watchers: FileSystemWatcher[] = [];
     private configListener?: Disposable;
     private pendingUpdates = new Map<string, "update" | "remove">();
     private debounceTimer?: NodeJS.Timeout;
+    private buildSettingsTimer?: NodeJS.Timeout;
     private disposed = false;
     private indexVersion = 0;
-    /** Identifies the current full scan so that a superseded one stops writing. */
-    private scanToken = 0;
+
+    /**
+     * Bumped whenever a full scan starts. Any write that was scheduled under an
+     * older generation is dropped, so a superseded scan — or an incremental
+     * update overtaken by a rescan — can never resurrect stale data.
+     */
+    private generation = 0;
+
+    /** Serializes scans and flushes so two of them never interleave their writes. */
+    private queue: Promise<void> = Promise.resolve();
 
     private changeEmitter = new EventEmitter<void>();
     /** Fires when the initial scan finishes and after every incremental update. */
@@ -127,7 +81,7 @@ export class UnityAssetIndex implements Disposable {
     constructor() {
         this.registerWatchers();
         this.configListener = workspace.onDidChangeConfiguration((event) => this.onConfigurationChanged(event));
-        void this.scanWorkspace();
+        this.enqueue(() => this.scanWorkspace());
     }
 
     /** Increases whenever the index content changed; used as a cache key. */
@@ -137,29 +91,27 @@ export class UnityAssetIndex implements Disposable {
 
     /** GUID of a script file. Returns undefined until the file has been indexed. */
     public getGuid(filePath: string): string | undefined {
-        return this.guidByScriptPath.get(normalizeKey(filePath));
+        return this.state.getGuid(filePath);
     }
 
     /** Scenes referencing the given GUID. Answered from the reverse index. */
     public getSceneReferences(guid: string): string[] {
-        return this.getReferences(guid, "scene");
+        return this.state.getReferences(guid, "scene");
     }
 
     /** Prefabs referencing the given GUID. Answered from the reverse index. */
     public getPrefabReferences(guid: string): string[] {
-        return this.getReferences(guid, "prefab");
+        return this.state.getReferences(guid, "prefab");
     }
 
     /** UnityEvent connections that involve the given class, by its simple name. */
     public getConnectionsForClass(className: string): UnityEventConnection[] {
-        if (!this.connectionsByClass) {
-            this.connectionsByClass = this.buildConnectionsByClass();
-        }
-        return this.connectionsByClass.get(className) ?? [];
+        return this.state.getConnectionsForClass(className);
     }
 
     public dispose(): void {
         this.disposed = true;
+        this.generation++;
 
         for (const watcher of this.watchers) {
             watcher.dispose();
@@ -173,15 +125,35 @@ export class UnityAssetIndex implements Disposable {
             clearTimeout(this.debounceTimer);
             this.debounceTimer = undefined;
         }
+        if (this.buildSettingsTimer) {
+            clearTimeout(this.buildSettingsTimer);
+            this.buildSettingsTimer = undefined;
+        }
 
         this.pendingUpdates.clear();
-        this.guidByScriptPath.clear();
-        this.classNameByGuid.clear();
-        this.assets.clear();
-        this.guidReferences.clear();
-        this.buildSettingsScenes.clear();
-        this.connectionsByClass = undefined;
+        this.state.clear();
         this.changeEmitter.dispose();
+    }
+
+    // --- scheduling ---------------------------------------------------------
+
+    /** Runs work after whatever is already queued, so writes never interleave. */
+    private enqueue(work: () => Promise<void>): void {
+        this.queue = this.queue.then(async () => {
+            if (this.disposed) {
+                return;
+            }
+            try {
+                await work();
+            } catch (error) {
+                logger.warn("Indexing failed: %s", error);
+            }
+        });
+    }
+
+    /** True once the work started under this generation has been superseded. */
+    private isStale(generation: number): boolean {
+        return this.disposed || this.generation !== generation;
     }
 
     // --- watching -----------------------------------------------------------
@@ -199,11 +171,7 @@ export class UnityAssetIndex implements Disposable {
             const buildSettingsWatcher = workspace.createFileSystemWatcher(
                 new RelativePattern(folder, BUILD_SETTINGS_RELATIVE)
             );
-            const onBuildSettingsChanged = () => {
-                if (this.onlyScenesInBuildSettings()) {
-                    void this.scanWorkspace();
-                }
-            };
+            const onBuildSettingsChanged = () => this.scheduleRescan();
             buildSettingsWatcher.onDidCreate(onBuildSettingsChanged);
             buildSettingsWatcher.onDidChange(onBuildSettingsChanged);
             buildSettingsWatcher.onDidDelete(onBuildSettingsChanged);
@@ -211,9 +179,25 @@ export class UnityAssetIndex implements Disposable {
         }
     }
 
+    // Unity usually rewrites EditorBuildSettings.asset in more than one step, so
+    // coalesce the events instead of starting a full scan per event.
+    private scheduleRescan(): void {
+        if (this.disposed || !this.onlyScenesInBuildSettings()) {
+            return;
+        }
+
+        if (this.buildSettingsTimer) {
+            clearTimeout(this.buildSettingsTimer);
+        }
+        this.buildSettingsTimer = setTimeout(() => {
+            this.buildSettingsTimer = undefined;
+            this.enqueue(() => this.scanWorkspace());
+        }, DEBOUNCE_MS);
+    }
+
     private onConfigurationChanged(event: ConfigurationChangeEvent): void {
         if (event.affectsConfiguration("unitySWpack.onlyScenesInBuildSettings")) {
-            void this.scanWorkspace();
+            this.enqueue(() => this.scanWorkspace());
         }
     }
 
@@ -227,7 +211,14 @@ export class UnityAssetIndex implements Disposable {
         }
 
         const filePath = uri.fsPath;
-        if (!assetKind(filePath) && !isScriptMeta(filePath)) {
+        if (!assetKindOf(filePath) && !isScriptMeta(filePath)) {
+            return;
+        }
+
+        // The watcher glob does not exclude Unity's hidden and "~" folders, but the
+        // initial scan does; keep both sides indexing exactly the same files.
+        const folder = workspace.getWorkspaceFolder(uri);
+        if (folder && hasIgnoredSegment(path.relative(folder.uri.fsPath, filePath))) {
             return;
         }
 
@@ -235,27 +226,37 @@ export class UnityAssetIndex implements Disposable {
         if (this.debounceTimer) {
             clearTimeout(this.debounceTimer);
         }
-        this.debounceTimer = setTimeout(() => void this.flushUpdates(), DEBOUNCE_MS);
+        this.debounceTimer = setTimeout(() => {
+            this.debounceTimer = undefined;
+            this.enqueue(() => this.flushUpdates());
+        }, DEBOUNCE_MS);
     }
 
     private async flushUpdates(): Promise<void> {
-        this.debounceTimer = undefined;
-        if (this.disposed) {
-            return;
-        }
+        const generation = this.generation;
 
         const updates = [...this.pendingUpdates.entries()];
         this.pendingUpdates.clear();
+        if (updates.length === 0) {
+            return;
+        }
 
-        for (const [filePath, kind] of updates) {
-            if (this.disposed) {
+        // Removals first: a rename delivers a delete of the old .meta and a create
+        // of the new one with the same GUID, and the create must win.
+        const ordered = [
+            ...updates.filter(([, kind]) => kind === "remove"),
+            ...updates.filter(([, kind]) => kind !== "remove"),
+        ];
+
+        for (const [filePath, kind] of ordered) {
+            if (this.isStale(generation)) {
                 return;
             }
 
             if (kind === "remove") {
                 this.removePath(filePath);
             } else {
-                await this.indexPath(filePath);
+                await this.indexPath(filePath, generation);
             }
         }
 
@@ -265,18 +266,15 @@ export class UnityAssetIndex implements Disposable {
     // --- scanning -----------------------------------------------------------
 
     private async scanWorkspace(): Promise<void> {
-        const folders = workspace.workspaceFolders ?? [];
         const startTime = Date.now();
-        const token = ++this.scanToken;
-        const isStale = () => this.disposed || this.scanToken !== token;
+        const generation = ++this.generation;
+        const onlyBuildSettingsScenes = this.onlyScenesInBuildSettings();
 
         // Start from scratch so that a configuration change cannot leave stale data.
-        this.assets.clear();
-        this.guidReferences.clear();
-        this.buildSettingsScenes.clear();
+        this.state.clear();
 
-        for (const folder of folders) {
-            if (isStale()) {
+        for (const folder of workspace.workspaceFolders ?? []) {
+            if (this.isStale(generation)) {
                 return;
             }
 
@@ -286,59 +284,62 @@ export class UnityAssetIndex implements Disposable {
                 continue;
             }
 
-            if (this.onlyScenesInBuildSettings()) {
-                await this.readBuildSettings(root);
+            if (onlyBuildSettingsScenes) {
+                await this.readBuildSettings(root, generation);
             }
 
             const files = await collectFiles(assetsDir);
-            if (isStale()) {
+            if (this.isStale(generation)) {
                 return;
             }
 
             const metaFiles = files.filter(isScriptMeta);
-            const assetFiles = files.filter((file) => assetKind(file) !== undefined);
+            const assetFiles = files.filter((file) => assetKindOf(file) !== undefined);
 
             // Scripts first: scenes and prefabs resolve their targets through the GUID map.
-            await mapWithConcurrency(metaFiles, READ_CONCURRENCY, (file) => this.indexScriptMeta(file));
-            await mapWithConcurrency(assetFiles, READ_CONCURRENCY, (file) => this.indexAsset(file));
+            await mapWithConcurrency(metaFiles, READ_CONCURRENCY, (file) => this.indexScriptMeta(file, generation));
+            await mapWithConcurrency(assetFiles, READ_CONCURRENCY, (file) => this.indexAsset(file, generation));
         }
 
-        if (isStale()) {
+        if (this.isStale(generation)) {
             return;
         }
 
-        logger.debug("Indexed %d assets in %d milliseconds", this.assets.size, Date.now() - startTime);
+        logger.debug("Indexed %d assets in %d milliseconds", this.state.assetCount, Date.now() - startTime);
         this.notifyChanged();
     }
 
-    private async readBuildSettings(root: string): Promise<void> {
+    private async readBuildSettings(root: string, generation: number): Promise<void> {
         const settingsPath = path.join(root, ...BUILD_SETTINGS_RELATIVE.split("/"));
         const text = await readTextFile(settingsPath);
-        if (text === undefined || this.disposed) {
+        if (text === undefined || this.isStale(generation)) {
             return;
         }
 
         const scenes = parseBuildSettingsScenePaths(text, (message, ...args) => logger.warn(message, ...args));
-        this.buildSettingsScenes.set(normalizeKey(root), scenes);
+        this.state.setBuildSettingsScenes(root, scenes);
         logger.debug("EditorBuildSettings.asset lists %d scenes for %s", scenes.length, root);
     }
 
-    private async indexPath(filePath: string): Promise<void> {
+    private async indexPath(filePath: string, generation: number): Promise<void> {
         if (isScriptMeta(filePath)) {
-            await this.indexScriptMeta(filePath);
-        } else if (assetKind(filePath)) {
-            await this.indexAsset(filePath);
+            await this.indexScriptMeta(filePath, generation);
+        } else if (assetKindOf(filePath)) {
+            await this.indexAsset(filePath, generation);
         }
     }
 
-    private async indexScriptMeta(metaPath: string): Promise<void> {
+    private async indexScriptMeta(metaPath: string, generation: number): Promise<void> {
         const text = await readTextFile(metaPath);
+
+        // Re-check after every await: the read may have outlived its scan.
+        if (this.isStale(generation)) {
+            return;
+        }
+
         if (text === undefined) {
             // The file disappeared between the event and the read.
             this.removePath(metaPath);
-            return;
-        }
-        if (this.disposed) {
             return;
         }
 
@@ -348,165 +349,68 @@ export class UnityAssetIndex implements Disposable {
             return;
         }
 
-        const scriptPath = metaPath.slice(0, -".meta".length);
-        this.guidByScriptPath.set(normalizeKey(scriptPath), guid);
-        this.classNameByGuid.set(guid, assetBaseName(scriptPath));
-        this.connectionsByClass = undefined;
+        this.state.setScript(assetPathOfMeta(metaPath), guid);
     }
 
-    private async indexAsset(assetPath: string): Promise<void> {
-        const kind = assetKind(assetPath);
+    private async indexAsset(assetPath: string, generation: number): Promise<void> {
+        const kind = assetKindOf(assetPath);
         if (!kind) {
             return;
         }
 
         const text = await readTextFile(assetPath);
+        if (this.isStale(generation)) {
+            return;
+        }
+
         if (text === undefined) {
             this.removePath(assetPath);
             return;
         }
-        if (this.disposed) {
-            return;
-        }
 
         const startTime = Date.now();
-        let entry: AssetEntry;
-        let guids: Set<string>;
+        const folder = workspace.getWorkspaceFolder(Uri.file(assetPath));
+        const indexConnections = this.state.shouldIndexConnections(
+            assetPath,
+            kind,
+            folder?.uri.fsPath,
+            this.onlyScenesInBuildSettings()
+        );
 
-        if (kind === "scene" && !this.shouldIndexConnections(assetPath)) {
-            // The scene is not in the build settings: keep it in the reverse index
-            // for reference counts, but skip the (much costlier) YAML parse.
-            entry = { path: assetPath, kind, connections: [], gameObjectNames: new Map() };
-            guids = collectGuidReferences(text);
-        } else {
+        let content: AssetContent;
+        if (indexConnections) {
             const data = parseUnityAsset(text, (message, ...args) =>
                 logger.warn(`${message} (in ${assetPath})`, ...args)
             );
-            entry = {
-                path: assetPath,
-                kind,
+            content = {
                 connections: data.connections,
                 gameObjectNames: data.gameObjectNames,
+                guids: data.referencedGuids,
             };
-            guids = data.referencedGuids;
+        } else {
+            // The scene is not in the build settings: keep it in the reverse index
+            // for reference counts, but skip the (much costlier) YAML parse.
+            content = { connections: [], gameObjectNames: new Map(), guids: collectGuidReferences(text) };
         }
 
         // Replacing the whole entry evicts GameObject ids and connections that
         // no longer exist in the re-parsed file.
-        this.setAssetEntry(normalizeKey(assetPath), entry, guids);
+        this.state.setAsset(assetPath, kind, content);
 
         logger.debug(
             "Parsed %s in %d milliseconds and found %d event bindings",
             assetPath,
             Date.now() - startTime,
-            entry.connections.length
+            content.connections.length
         );
     }
 
-    private shouldIndexConnections(scenePath: string): boolean {
-        if (!this.onlyScenesInBuildSettings()) {
-            return true;
-        }
-
-        const folder = workspace.getWorkspaceFolder(Uri.file(scenePath));
-        const scenes = folder ? this.buildSettingsScenes.get(normalizeKey(folder.uri.fsPath)) : undefined;
-        if (!scenes || scenes.length === 0) {
-            return true;
-        }
-
-        const normalized = scenePath.replace(/\\/g, "/");
-        return scenes.some((listed) => normalized.endsWith(listed));
-    }
-
-    private setAssetEntry(key: string, entry: AssetEntry, guids: Set<string>): void {
-        this.assets.set(key, entry);
-        this.guidReferences.set(key, guids);
-        this.connectionsByClass = undefined;
-    }
-
-    private clearAssetEntry(key: string): void {
-        if (!this.assets.delete(key)) {
-            return;
-        }
-
-        this.guidReferences.remove(key);
-        this.connectionsByClass = undefined;
-    }
-
     private removePath(filePath: string): void {
-        const key = normalizeKey(filePath);
-
         if (isScriptMeta(filePath)) {
-            const scriptKey = normalizeKey(filePath.slice(0, -".meta".length));
-            const guid = this.guidByScriptPath.get(scriptKey);
-            if (guid) {
-                this.guidByScriptPath.delete(scriptKey);
-                this.classNameByGuid.delete(guid);
-                this.connectionsByClass = undefined;
-            }
-            return;
+            this.state.removeScript(assetPathOfMeta(filePath));
+        } else {
+            this.state.removeAsset(filePath);
         }
-
-        this.clearAssetEntry(key);
-    }
-
-    // --- queries ------------------------------------------------------------
-
-    private getReferences(guid: string, kind: AssetKind): string[] {
-        const result: string[] = [];
-
-        for (const key of this.guidReferences.getAssets(guid)) {
-            const entry = this.assets.get(key);
-            if (entry && entry.kind === kind) {
-                result.push(entry.path);
-            }
-        }
-
-        return result.sort();
-    }
-
-    private buildConnectionsByClass(): Map<string, UnityEventConnection[]> {
-        const byClass = new Map<string, UnityEventConnection[]>();
-
-        const add = (className: string, connection: UnityEventConnection) => {
-            if (!className) {
-                return;
-            }
-            const key = simpleClassName(className);
-            const bucket = byClass.get(key);
-            if (bucket) {
-                bucket.push(connection);
-            } else {
-                byClass.set(key, [connection]);
-            }
-        };
-
-        for (const entry of this.assets.values()) {
-            for (const raw of entry.connections) {
-                const connection = this.resolveConnection(entry, raw);
-                add(connection.callingClass, connection);
-                if (simpleClassName(connection.calledClass) !== simpleClassName(connection.callingClass)) {
-                    add(connection.calledClass, connection);
-                }
-            }
-        }
-
-        return byClass;
-    }
-
-    private resolveConnection(entry: AssetEntry, raw: RawEventConnection): UnityEventConnection {
-        const calledClass = raw.calledClassName ?? this.classNameByGuid.get(raw.calledClassGuid ?? "") ?? "";
-
-        return {
-            assetPath: entry.path,
-            assetName: assetBaseName(entry.path),
-            gameObject: entry.gameObjectNames.get(raw.gameObjectId) ?? "Unknown Game Object",
-            callingClass: this.classNameByGuid.get(raw.callingClassGuid) ?? "",
-            calledClass,
-            calledMethod: raw.calledMethod,
-            event: raw.event,
-            kind: entry.kind,
-        };
     }
 
     private notifyChanged(): void {
@@ -514,7 +418,6 @@ export class UnityAssetIndex implements Disposable {
             return;
         }
         this.indexVersion++;
-        this.connectionsByClass = undefined;
         this.changeEmitter.fire();
     }
 }
@@ -555,7 +458,7 @@ async function collectFiles(dir: string): Promise<string[]> {
         const full = path.join(dir, entry.name);
         if (entry.isDirectory()) {
             results.push(...(await collectFiles(full)));
-        } else if (isScriptMeta(full) || assetKind(full)) {
+        } else if (isScriptMeta(full) || assetKindOf(full)) {
             results.push(full);
         }
     }
