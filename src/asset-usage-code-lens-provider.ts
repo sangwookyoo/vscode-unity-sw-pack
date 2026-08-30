@@ -1,15 +1,6 @@
-import {
-    CodeLens,
-    CodeLensProvider,
-    Command,
-    Disposable,
-    Event,
-    EventEmitter,
-    TextDocument,
-    workspace,
-} from "vscode";
+import { CodeLens, CodeLensProvider, Command, Disposable, Event, EventEmitter, TextDocument, workspace } from "vscode";
 import { parser, language } from "./extension";
-import { findAssetsRoot } from "./UnityProject";
+import { findAssetsRoot } from "./unity-project";
 import { UnityAssetIndex } from "./unity-asset-index";
 import * as path from "path";
 

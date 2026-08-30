@@ -105,12 +105,12 @@ export function maskCommentsAndStrings(source: string): string {
             end = end === -1 ? source.length : end + 2;
             blank(i, end);
             i = end;
-        } else if (char === "@" && next === "\"") {
+        } else if (char === "@" && next === '"') {
             // Verbatim string: "" is an escaped quote.
             let end = i + 2;
             while (end < source.length) {
-                if (source[end] === "\"") {
-                    if (source[end + 1] === "\"") {
+                if (source[end] === '"') {
+                    if (source[end + 1] === '"') {
                         end += 2;
                         continue;
                     }
@@ -121,7 +121,7 @@ export function maskCommentsAndStrings(source: string): string {
             }
             blank(i, end);
             i = end;
-        } else if (char === "\"" || char === "'") {
+        } else if (char === '"' || char === "'") {
             let end = i + 1;
             while (end < source.length) {
                 if (source[end] === "\\") {
@@ -241,12 +241,7 @@ function findContainingType(scopes: TypeScope[], offset: number): TypeScope | un
     return found;
 }
 
-function collectMembers(
-    source: string,
-    regex: RegExp,
-    nameGroup: number,
-    returnTypeGroup?: number
-): CSharpMember[] {
+function collectMembers(source: string, regex: RegExp, nameGroup: number, returnTypeGroup?: number): CSharpMember[] {
     const masked = maskCommentsAndStrings(source);
     const scopes = findTypeScopes(masked);
     if (scopes.length === 0) {

@@ -27,9 +27,9 @@ async function deleteMetaFile(filePath: string): Promise<void> {
     }
 }
 
-export async function activate(context: ExtensionContext) {
+export function activate(context: ExtensionContext) {
     // 기존 리스너가 있다면 정리
-    await deactivate();
+    deactivate();
 
     // 에디터에서 발생한 이름 변경/삭제 이벤트는 정확한 경로 쌍을 제공하므로 추측이 필요 없다.
     // 파일과 디렉터리 모두 <경로>.meta 규칙을 그대로 따른다.
@@ -65,7 +65,7 @@ export async function activate(context: ExtensionContext) {
     context.subscriptions.push(renameDisposable, deleteDisposable);
 }
 
-export async function deactivate() {
+export function deactivate() {
     for (const disposable of disposables) {
         disposable.dispose();
     }

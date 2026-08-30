@@ -128,11 +128,7 @@ export function parseUnityAsset(text: string, warn?: WarnFunction): UnityAssetDa
     return { connections, gameObjectNames, referencedGuids: collectGuidReferences(text) };
 }
 
-function parseMonoBehaviour(
-    behaviour: any,
-    fileId: string,
-    fileIdsToGuids: Map<string, string>
-): RawEventConnection[] {
+function parseMonoBehaviour(behaviour: any, fileId: string, fileIdsToGuids: Map<string, string>): RawEventConnection[] {
     const guid = behaviour.m_Script?.guid;
     const gameObjectId = behaviour.m_GameObject?.fileID;
     if (!guid || !gameObjectId) {

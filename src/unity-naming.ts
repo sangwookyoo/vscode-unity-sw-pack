@@ -16,7 +16,7 @@ export function toFriendlyName(name: string): string {
     value = value.replace(/^_+/, "");
 
     // snake_case / kebab-case separators become spaces.
-    value = value.replace(/[_\-]+/g, " ");
+    value = value.replace(/[_-]+/g, " ");
 
     // camelCase and PascalCase boundaries become spaces.
     value = value.replace(/([a-z0-9])([A-Z])/g, "$1 $2");

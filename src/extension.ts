@@ -1,20 +1,14 @@
-import {
-    workspace,
-    ExtensionContext,
-    languages,
-    commands,
-    env,
-} from "vscode";
+import { workspace, ExtensionContext, languages, commands, env } from "vscode";
 import * as fs from "fs";
 import * as path from "path";
 
-import Parser from "./Parser";
-import { UnityEventMessageProvider } from "./UnityEventMessage";
-import { UsageScenePrefabProvider } from "./UsageScenePrefab";
-import UnityMessageHoverProvider from "./Hover";
-import { TypeToggleProvider, returnMethodType } from "./TypeToggle";
-import { searchUnityDocs } from "./SearchUnityDocs";
-import * as metaFileSync from "./MetaFileSync";
+import Parser from "./unity-message-parser";
+import { UnityEventMessageProvider } from "./unity-message-code-lens-provider";
+import { UsageScenePrefabProvider } from "./asset-usage-code-lens-provider";
+import UnityMessageHoverProvider from "./unity-message-hover-provider";
+import { TypeToggleProvider, returnMethodType } from "./coroutine-toggle";
+import { searchUnityDocs } from "./search-unity-docs";
+import * as metaFileSync from "./meta-file-sync";
 import * as unityEventLens from "./unity-event-lens";
 import { initializeLogger } from "./logger";
 import { UnityAssetIndex } from "./unity-asset-index";
@@ -75,7 +69,7 @@ export function activate(context: ExtensionContext) {
                 context.subscriptions.push(
                     languages.registerCodeLensProvider({ language: "csharp" }, new TypeToggleProvider()),
                     commands.registerCommand("unitySWpack.changeReturnType", (returnType: string, line: number) => {
-                        returnMethodType(returnType, line);
+                        void returnMethodType(returnType, line);
                     })
                 );
             },
@@ -105,7 +99,5 @@ export function activate(context: ExtensionContext) {
 }
 
 export function deactivate() {
-    try {
-        metaFileSync.deactivate();
-    } catch {}
+    metaFileSync.deactivate();
 }

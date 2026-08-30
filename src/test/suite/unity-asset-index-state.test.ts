@@ -203,11 +203,7 @@ suite("UnityAssetIndexState connections", () => {
         const state = new UnityAssetIndexState();
         state.setScript(scriptPath("ButtonHandler"), "guid-button");
         state.setScript(scriptPath("AudioManager"), "guid-audio");
-        state.setAsset(
-            scenePath("Main"),
-            "scene",
-            content([connection()], [["100", "StartButton"]], ["guid-button"])
-        );
+        state.setAsset(scenePath("Main"), "scene", content([connection()], [["100", "StartButton"]], ["guid-button"]));
 
         const [resolved] = state.getConnectionsForClass("ButtonHandler");
         assert.strictEqual(resolved.callingClass, "ButtonHandler");

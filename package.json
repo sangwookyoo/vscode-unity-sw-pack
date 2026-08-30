@@ -1,160 +1,170 @@
 {
-    "name": "unity-sw-pack",
-    "displayName": "Unity SW Pack",
-    "description": "Unity Extension for Visual Studio Code",
-    "version": "2.0.0",
-    "publisher": "SangwookYoo",
-    "icon": "images/icon.png",
-    "license": "MIT",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/sangwookyoo/vscode-unity-sw-pack.git"
-    },
-    "bugs": {
-        "url": "https://github.com/sangwookyoo/vscode-unity-sw-pack/issues"
-    },
-    "engines": {
-        "vscode": "^1.76.0"
-    },
-    "categories": [
-        "Snippets",
-        "Programming Languages"
-    ],
-    "keywords": [
-        "unity",
-        "unity3d",
-        "c#",
-        "csharp"
-    ],
-    "activationEvents": [
-        "onLanguage:csharp"
-    ],
-    "main": "./out/extension.js",
-    "contributes": {
-        "configuration": {
-            "title": "Unity SW Pack",
-            "properties": {
-                "unitySWpack.unityEventMessage": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Displays a CodeLens above Unity lifecycle methods (e.g., Awake, Start, Update)."
-                },
-                "unitySWpack.usageScenePrefab": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Shows a CodeLens indicating how many Scenes and Prefabs reference the current script."
-                },
-                "unitySWpack.unityMessageHover": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Shows a description of Unity lifecycle methods when you hover over them."
-                },
-                "unitySWpack.typeToggle": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Adds a CodeLens to toggle a method's return type between 'void' and 'IEnumerator' for coroutines."
-                },
-                "unitySWpack.metaFileSync": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Automatically manages .meta files when files are created, deleted, or renamed in the editor."
-                },
-                "unitySWpack.searchInUnityDocs": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Adds a command to search for the selected API or keyword in the official Unity Documentation."
-                },
-                "unitySWpack.unityEventLens": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Displays a CodeLens for methods linked to UnityEvents in the Inspector (e.g., Button.onClick)."
-                },
-                "unitySWpack.onlyScenesInBuildSettings": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "Only reads UnityEvent connections from the scenes listed in ProjectSettings/EditorBuildSettings.asset."
-                },
-                "unitySWpack.debugLogging": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "Writes detailed diagnostic messages to the 'Unity SW Pack' output channel."
-                }
-            }
+  "name": "unity-sw-pack",
+  "displayName": "Unity SW Pack",
+  "description": "Unity Extension for Visual Studio Code",
+  "version": "2.0.0",
+  "publisher": "SangwookYoo",
+  "icon": "images/icon.png",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sangwookyoo/vscode-unity-sw-pack.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sangwookyoo/vscode-unity-sw-pack/issues"
+  },
+  "engines": {
+    "vscode": "^1.76.0"
+  },
+  "categories": [
+    "Snippets",
+    "Programming Languages"
+  ],
+  "keywords": [
+    "unity",
+    "unity3d",
+    "c#",
+    "csharp"
+  ],
+  "activationEvents": [
+    "onLanguage:csharp"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "Unity SW Pack",
+      "properties": {
+        "unitySWpack.unityEventMessage": {
+          "type": "boolean",
+          "default": true,
+          "description": "Displays a CodeLens above Unity lifecycle methods (e.g., Awake, Start, Update)."
         },
-        "snippets": [
-            {
-                "language": "csharp",
-                "path": "./out/snippets/en.json"
-            }
-        ],
-        "themes": [
-            {
-                "label": "Unity SW Pack Dark",
-                "uiTheme": "vs-dark",
-                "path": "./theme/unity-sw-theme.json"
-            }
-        ],
-        "menus": {
-            "commandPalette": [
-                {
-                    "command": "unitySWpack.showEventReferences",
-                    "when": "false"
-                }
-            ],
-            "editor/context": [
-                {
-                    "command": "unitySWpack.searchInUnityDocumentation",
-                    "when": "editorHasSelection == true",
-                    "group": "Unity SW Pack"
-                }
-            ]
+        "unitySWpack.usageScenePrefab": {
+          "type": "boolean",
+          "default": true,
+          "description": "Shows a CodeLens indicating how many Scenes and Prefabs reference the current script."
         },
-        "commands": [
-            {
-                "command": "unitySWpack.searchInUnityDocumentation",
-                "title": "Search in Unity Documentation"
-            },
-            {
-                "command": "unitySWpack.changeReturnType",
-                "title": "Change coroutine"
-            },
-            {
-                "command": "unitySWpack.showEventReferences",
-                "title": "Show Unity Event References"
-            }
-        ],
-        "keybindings": [
-            {
-                "command": "unitySWpack.searchInUnityDocumentation",
-                "key": "ctrl+alt+u",
-                "mac": "cmd+alt+u",
-                "when": "editorHasSelection == true"
-            }
-        ]
+        "unitySWpack.unityMessageHover": {
+          "type": "boolean",
+          "default": true,
+          "description": "Shows a description of Unity lifecycle methods when you hover over them."
+        },
+        "unitySWpack.typeToggle": {
+          "type": "boolean",
+          "default": true,
+          "description": "Adds a CodeLens to toggle a method's return type between 'void' and 'IEnumerator' for coroutines."
+        },
+        "unitySWpack.metaFileSync": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically manages .meta files when files are created, deleted, or renamed in the editor."
+        },
+        "unitySWpack.searchInUnityDocs": {
+          "type": "boolean",
+          "default": true,
+          "description": "Adds a command to search for the selected API or keyword in the official Unity Documentation."
+        },
+        "unitySWpack.unityEventLens": {
+          "type": "boolean",
+          "default": true,
+          "description": "Displays a CodeLens for methods linked to UnityEvents in the Inspector (e.g., Button.onClick)."
+        },
+        "unitySWpack.onlyScenesInBuildSettings": {
+          "type": "boolean",
+          "default": false,
+          "description": "Only reads UnityEvent connections from the scenes listed in ProjectSettings/EditorBuildSettings.asset."
+        },
+        "unitySWpack.debugLogging": {
+          "type": "boolean",
+          "default": false,
+          "description": "Writes detailed diagnostic messages to the 'Unity SW Pack' output channel."
+        }
+      }
     },
-    "scripts": {
-        "vscode:prepublish": "npm run compile",
-        "compile": "tsc -p ./",
-        "watch": "tsc -watch -p ./",
-        "pretest": "npm run compile && npm run lint",
-        "lint": "eslint src --ext ts",
-        "test": "node ./out/test/runTest.js"
+    "snippets": [
+      {
+        "language": "csharp",
+        "path": "./out/snippets/en.json"
+      }
+    ],
+    "themes": [
+      {
+        "label": "Unity SW Pack Dark",
+        "uiTheme": "vs-dark",
+        "path": "./theme/unity-sw-theme.json"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "unitySWpack.showEventReferences",
+          "when": "false"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "unitySWpack.searchInUnityDocumentation",
+          "when": "editorHasSelection == true",
+          "group": "Unity SW Pack"
+        }
+      ]
     },
-    "devDependencies": {
-        "@types/glob": "^8.1.0",
-        "@types/js-yaml": "^4.0.5",
-        "@types/mocha": "^10.0.1",
-        "@types/node": "^16.18.23",
-        "@types/vscode": "^1.76.0",
-        "@typescript-eslint/eslint-plugin": "^5.56.0",
-        "@typescript-eslint/parser": "^5.56.0",
-        "@vscode/test-electron": "^2.3.0",
-        "eslint": "^8.36.0",
-        "glob": "^8.1.0",
-        "mocha": "^10.2.0",
-        "typescript": "^4.9.5"
-    },
-    "dependencies": {
-        "js-yaml": "^4.1.0"
-    }
+    "commands": [
+      {
+        "command": "unitySWpack.searchInUnityDocumentation",
+        "title": "Search in Unity Documentation"
+      },
+      {
+        "command": "unitySWpack.changeReturnType",
+        "title": "Change coroutine"
+      },
+      {
+        "command": "unitySWpack.showEventReferences",
+        "title": "Show Unity Event References"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "unitySWpack.searchInUnityDocumentation",
+        "key": "ctrl+alt+u",
+        "mac": "cmd+alt+u",
+        "when": "editorHasSelection == true"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "clean": "rimraf out dist",
+    "compile": "npm run clean && tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test:unit": "npm run compile && mocha --ui tdd \"out/test/suite/**/*.test.js\" --ignore \"out/test/suite/extension.test.js\"",
+    "pretest": "npm run compile && npm run lint",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "@types/glob": "^8.1.0",
+    "@types/js-yaml": "^4.0.5",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "^16.18.23",
+    "@types/vscode": "^1.76.0",
+    "@typescript-eslint/eslint-plugin": "^5.56.0",
+    "@typescript-eslint/parser": "^5.56.0",
+    "@vscode/test-electron": "^2.3.0",
+    "eslint": "^9.39.5",
+    "eslint-config-prettier": "^10.1.8",
+    "glob": "^8.1.0",
+    "mocha": "^10.2.0",
+    "prettier": "^3.9.6",
+    "rimraf": "^6.1.3",
+    "typescript": "^4.9.5",
+    "typescript-eslint": "^8.68.0"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0"
+  }
 }

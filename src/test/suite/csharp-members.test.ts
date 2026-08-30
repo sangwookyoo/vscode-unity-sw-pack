@@ -1,6 +1,6 @@
 import * as assert from "assert";
 
-import { findPublicMethods, findUnityEventFields, maskCommentsAndStrings } from "../../CSharpSyntax";
+import { findPublicMethods, findUnityEventFields, maskCommentsAndStrings } from "../../csharp-syntax";
 
 function names(members: { name: string }[]): string[] {
     return members.map((member) => member.name);
@@ -23,7 +23,7 @@ const menuButton = [
     "        public void StartGame() { }",
     "        public async Task<Result<int>> LoadAsync(string path) { return null; }",
     "        public static void Log(string message) { }",
-    "        public override string ToString() { return \"public void Fake() {\"; }",
+    '        public override string ToString() { return "public void Fake() {"; }',
     "        private void Hidden() { }",
     "        public MenuButton() { }",
     "",

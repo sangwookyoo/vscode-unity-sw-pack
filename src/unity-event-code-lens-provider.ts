@@ -29,7 +29,10 @@ export default class UnityEventCodeLensProvider implements CodeLensProvider, Dis
 
     private readonly indexListener: Disposable;
 
-    constructor(private readonly finder: UnityEventFinder, index: UnityAssetIndex) {
+    constructor(
+        private readonly finder: UnityEventFinder,
+        index: UnityAssetIndex
+    ) {
         // The index fills in asynchronously, so the lenses have to be requested again
         // once it is ready; otherwise they would stay empty until the user types.
         this.indexListener = index.onDidChangeIndex(() => this.changeEmitter.fire());

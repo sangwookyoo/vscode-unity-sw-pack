@@ -1,5 +1,5 @@
 import { window, commands, Uri, Position, workspace } from "vscode";
-import { readDocsVersion } from "./UnityProject";
+import { readDocsVersion } from "./unity-project";
 
 // 프로젝트의 Unity 버전에 맞춘 문서 검색 URL (예: https://docs.unity3d.com/6000.0/Documentation/ScriptReference/30_search.html?q=)
 function buildSearchUrl(docsVersion: string, query: string): string {

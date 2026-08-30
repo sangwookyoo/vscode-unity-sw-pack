@@ -3,7 +3,7 @@
 // stays testable without an extension host.
 import { Range, TextDocument } from "vscode";
 
-import { CSharpMember, findPublicMethods, findUnityEventFields } from "./CSharpSyntax";
+import { CSharpMember, findPublicMethods, findUnityEventFields } from "./csharp-syntax";
 import { logger } from "./logger";
 import { UnityAssetIndex, UnityEventConnection } from "./unity-asset-index";
 import { simpleClassName } from "./unity-naming";
@@ -83,7 +83,9 @@ export class UnityEventFinder {
         for (const field of findUnityEventFields(source)) {
             const connections = this.index
                 .getConnectionsForClass(field.simpleClassName)
-                .filter((connection) => connection.event === field.name && classMatches(connection.callingClass, field));
+                .filter(
+                    (connection) => connection.event === field.name && classMatches(connection.callingClass, field)
+                );
 
             members.push({
                 kind: ConnectionEnd.event,

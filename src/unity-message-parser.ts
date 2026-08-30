@@ -1,7 +1,7 @@
 import { env } from "vscode";
 import * as snippetEn from "./snippets/en.json";
 import * as snippetKo from "./snippets/ko.json";
-import { findClassLine } from "./CSharpSyntax";
+import { findClassLine } from "./csharp-syntax";
 
 export default class Parser {
     private readonly methodNameRegex: RegExp;
