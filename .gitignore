@@ -21,3 +21,7 @@ npm-debug.log*
 # OS cruft
 .DS_Store
 Thumbs.db
+
+# Local AI assistant configuration, kept out of the public repository
+.claude/
+CLAUDE.md
